@@ -3,9 +3,13 @@
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { generateDailyEvent } from "@/lib/events";
+import { useT } from "@/lib/i18n";
 
 export function DailyEvent() {
+  const { t } = useT();
   const e = generateDailyEvent();
+  const titleKey = e.type === "category-xp" ? `ev.${e.category}` : e.type === "boss-damage" ? "ev.bossfrenzy" : "ev.coinrush";
+  const blurbKey = e.type === "category-xp" ? `ev.b.${e.category}` : e.type === "boss-damage" ? "ev.b.boss" : "ev.b.coin";
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -17,9 +21,9 @@ export function DailyEvent() {
       </span>
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-1.5 text-sm font-bold">
-          <Sparkles className="size-3.5 text-lime-300" /> Today&apos;s Event · {e.title}
+          <Sparkles className="size-3.5 text-lime-300" /> {t("ev.today", "Today's Event")} · {t(titleKey, e.title)}
         </p>
-        <p className="truncate text-xs text-muted">{e.blurb}</p>
+        <p className="truncate text-xs text-muted">{t(blurbKey, e.blurb)}</p>
       </div>
     </motion.div>
   );

@@ -27,12 +27,12 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 }
 
 const FEATURES = [
-  { icon: BrainCircuit, title: "Adaptive Quests", desc: "A smart engine crafts daily challenges tuned to your level, streak and difficulty preference.", color: "text-lime-300" },
-  { icon: Zap, title: "XP & Levels", desc: "Every quest earns XP. Watch your level climb and your progress bar fill with each victory.", color: "text-amber-300" },
-  { icon: ChartNoAxesColumn, title: "RPG Stats", desc: "Build Strength, Endurance, Agility and Consistency — visualised on a living radar chart.", color: "text-sky-300" },
-  { icon: Flame, title: "Streaks", desc: "Show up daily, build unstoppable streaks, and unlock milestone rewards at 3, 7, 14 & 30 days.", color: "text-orange-300" },
-  { icon: Swords, title: "Daily Boss Battles", desc: "Each completed quest deals damage to the day's boss. Defeat it for big bonus XP.", color: "text-rose-300" },
-  { icon: Users, title: "Leaderboards", desc: "Climb global and friends rankings by XP, level or streak. Friendly rivalry, real results.", color: "text-emerald-300" },
+  { key: "adaptive", icon: BrainCircuit, title: "Adaptive Quests", desc: "A smart engine crafts daily challenges tuned to your level, streak and difficulty preference.", color: "text-lime-300" },
+  { key: "xp", icon: Zap, title: "XP & Levels", desc: "Every quest earns XP. Watch your level climb and your progress bar fill with each victory.", color: "text-amber-300" },
+  { key: "stats", icon: ChartNoAxesColumn, title: "RPG Stats", desc: "Build Strength, Endurance, Agility and Consistency — visualised on a living radar chart.", color: "text-sky-300" },
+  { key: "streaks", icon: Flame, title: "Streaks", desc: "Show up daily, build unstoppable streaks, and unlock milestone rewards at 3, 7, 14 & 30 days.", color: "text-orange-300" },
+  { key: "boss", icon: Swords, title: "Daily Boss Battles", desc: "Each completed quest deals damage to the day's boss. Defeat it for big bonus XP.", color: "text-rose-300" },
+  { key: "leader", icon: Users, title: "Leaderboards", desc: "Climb global and friends rankings by XP, level or streak. Friendly rivalry, real results.", color: "text-emerald-300" },
 ];
 
 const STEPS = [
@@ -214,8 +214,8 @@ export default function Landing() {
                 <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-white/5 ring-1 ring-inset ring-white/10 transition-transform group-hover:scale-110">
                   <f.icon className={`size-6 ${f.color}`} />
                 </div>
-                <h3 className="font-display text-lg font-bold">{f.title}</h3>
-                <p className="mt-2 text-sm text-muted">{f.desc}</p>
+                <h3 className="font-display text-lg font-bold">{t(`feat.${f.key}.t`, f.title)}</h3>
+                <p className="mt-2 text-sm text-muted">{t(`feat.${f.key}.d`, f.desc)}</p>
               </div>
             </Reveal>
           ))}

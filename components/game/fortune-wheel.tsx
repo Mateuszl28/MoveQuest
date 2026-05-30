@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { SLICE_DEG, WHEEL, type WheelPrize } from "@/lib/wheel";
+import { useT } from "@/lib/i18n";
 
 const gradient = `conic-gradient(${WHEEL.map(
   (p, i) => `${p.color} ${i * SLICE_DEG}deg ${(i + 1) * SLICE_DEG}deg`,
@@ -16,6 +17,7 @@ export function FortuneWheel({
   canSpin: boolean;
   onClaim: (prize: WheelPrize) => void;
 }) {
+  const { t } = useT();
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [revealed, setRevealed] = useState<number | null>(null);
@@ -35,8 +37,8 @@ export function FortuneWheel({
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <div className="mb-3 flex items-center gap-2">
         <Sparkles className="size-5 text-lime-300" />
-        <h3 className="font-display font-bold">Fortune Wheel</h3>
-        <span className="ml-auto text-xs text-muted">free daily spin</span>
+        <h3 className="font-display font-bold">{t("wheel.title", "Fortune Wheel")}</h3>
+        <span className="ml-auto text-xs text-muted">{t("wheel.free", "free daily spin")}</span>
       </div>
 
       <div className="relative mx-auto aspect-square w-52">
@@ -73,14 +75,14 @@ export function FortuneWheel({
 
       <div className="mt-4 text-center">
         {revealed !== null && (
-          <p className="mb-2 text-sm font-semibold text-gold">🎉 You won {WHEEL[revealed].label}!</p>
+          <p className="mb-2 text-sm font-semibold text-gold">🎉 {t("wheel.won", "You won")} {WHEEL[revealed].label}!</p>
         )}
         <button
           onClick={spin}
           disabled={!canSpin || spinning}
           className="w-full rounded-xl bg-lime-300 py-2.5 text-sm font-bold text-[#15200a] disabled:opacity-40 active:scale-95"
         >
-          {spinning ? "Spinning…" : canSpin ? "Spin the wheel" : "Come back tomorrow"}
+          {spinning ? t("wheel.spinning", "Spinning…") : canSpin ? t("wheel.spin", "Spin the wheel") : t("wheel.tomorrow", "Come back tomorrow")}
         </button>
       </div>
     </div>

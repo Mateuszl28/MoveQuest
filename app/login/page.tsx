@@ -105,7 +105,7 @@ export default function Onboarding() {
               <p className="mt-2 text-muted">{t("ob.hero.sub", "Pick a name and an avatar for your adventure.")}</p>
 
               <div className="mt-7 space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">{t("ob.username", "Username")}</Label>
                 <Input
                   id="username"
                   autoFocus
@@ -118,7 +118,7 @@ export default function Onboarding() {
               </div>
 
               <div className="mt-6 space-y-2">
-                <Label>Avatar</Label>
+                <Label>{t("ob.avatar", "Avatar")}</Label>
                 <div className="grid grid-cols-6 gap-2">
                   {AVATARS.map((a) => (
                     <button
@@ -155,9 +155,9 @@ export default function Onboarding() {
                     }`}
                   >
                     <span className="text-3xl">{c.emoji}</span>
-                    <p className="mt-2 font-display font-bold">{c.name}</p>
-                    <p className="text-[11px] text-muted">{c.blurb}</p>
-                    <p className={`mt-2 text-[11px] font-semibold ${c.accent}`}>{c.passive}</p>
+                    <p className="mt-2 font-display font-bold">{t(`class.${c.id}.name`, c.name)}</p>
+                    <p className="text-[11px] text-muted">{t(`class.${c.id}.blurb`, c.blurb)}</p>
+                    <p className={`mt-2 text-[11px] font-semibold ${c.accent}`}>{t(`class.${c.id}.passive`, c.passive)}</p>
                   </button>
                 ))}
               </div>
@@ -170,7 +170,7 @@ export default function Onboarding() {
               <p className="mt-2 text-muted">{t("ob.about.sub", "We tune quest difficulty to your level.")}</p>
 
               <div className="mt-7 space-y-2">
-                <Label htmlFor="age">Age</Label>
+                <Label htmlFor="age">{t("ob.age", "Age")}</Label>
                 <Input
                   id="age"
                   type="number"
@@ -182,7 +182,7 @@ export default function Onboarding() {
               </div>
 
               <div className="mt-6 space-y-2">
-                <Label>Fitness level</Label>
+                <Label>{t("ob.level", "Fitness level")}</Label>
                 <div className="space-y-2">
                   {LEVELS.map((l) => (
                     <button

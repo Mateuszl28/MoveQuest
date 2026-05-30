@@ -6,6 +6,7 @@ import { DAILY_REWARD } from "@/lib/shop";
 import { dateKey } from "@/lib/utils";
 import { useGame } from "@/lib/game-store";
 import { playSfx } from "@/lib/sound";
+import { useT } from "@/lib/i18n";
 
 export function DailyReward({
   lastRewardDate,
@@ -15,6 +16,7 @@ export function DailyReward({
   onClaim: () => void;
 }) {
   const { state } = useGame();
+  const { t } = useT();
   const claimed = lastRewardDate === dateKey();
   const claim = () => {
     playSfx("claim", state.soundEnabled);
@@ -32,7 +34,7 @@ export function DailyReward({
           🎁
         </motion.div>
         <div className="min-w-0 flex-1">
-          <p className="font-display font-bold leading-tight">Daily Reward</p>
+          <p className="font-display font-bold leading-tight">{t("reward.title", "Daily Reward")}</p>
           <p className="flex flex-wrap items-center gap-x-3 text-xs text-muted">
             <span className="inline-flex items-center gap-1 text-gold"><Coins className="size-3.5" /> +{DAILY_REWARD.coins}</span>
             <span className="inline-flex items-center gap-1 text-gold"><Star className="size-3.5" /> +{DAILY_REWARD.xp} XP</span>
@@ -48,7 +50,7 @@ export function DailyReward({
             : "bg-gradient-to-r from-amber-300 to-amber-500 text-amber-950 shadow-lg shadow-amber-500/25"
         }`}
       >
-        <Gift className="size-4" /> {claimed ? "Claimed — back tomorrow" : "Claim daily reward"}
+        <Gift className="size-4" /> {claimed ? t("reward.claimed", "Claimed — back tomorrow") : t("reward.claim", "Claim daily reward")}
       </button>
     </div>
   );

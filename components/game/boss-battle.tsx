@@ -5,8 +5,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Swords, Trophy } from "lucide-react";
 import type { Boss } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/lib/i18n";
 
 export function BossBattle({ boss }: { boss: Boss | null }) {
+  const { t } = useT();
   const prevHp = useRef(boss?.hp ?? 0);
   const [hit, setHit] = useState(false);
   const [popups, setPopups] = useState<{ id: number; dmg: number }[]>([]);
@@ -36,8 +38,8 @@ export function BossBattle({ boss }: { boss: Boss | null }) {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-rose-400/25 bg-gradient-to-br from-rose-500/10 via-card/70 to-lime-400/10 p-5">
       <div className="mb-3 flex items-center justify-between">
-        <Badge variant="hard"><Swords className="size-3.5" /> Daily Boss</Badge>
-        <span className="text-xs text-muted">+{boss.bonusXp} XP on defeat</span>
+        <Badge variant="hard"><Swords className="size-3.5" /> {t("boss.daily", "Daily Boss")}</Badge>
+        <span className="text-xs text-muted">+{boss.bonusXp} {t("boss.ondefeat", "XP on defeat")}</span>
       </div>
 
       <div className="flex items-center gap-4">
@@ -99,14 +101,14 @@ export function BossBattle({ boss }: { boss: Boss | null }) {
             animate={{ opacity: 1, scale: 1 }}
             className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-gold/30 bg-gold/10 py-2 text-sm font-semibold text-gold"
           >
-            <Trophy className="size-4" /> Boss defeated! +{boss.bonusXp} bonus XP
+            <Trophy className="size-4" /> {t("boss.defeated", "Boss defeated!")} +{boss.bonusXp} XP
           </motion.div>
         )}
       </AnimatePresence>
 
       {!boss.defeated && (
         <p className="mt-4 text-center text-xs text-muted">
-          Complete quests to deal damage ⚔️
+          {t("boss.hint", "Complete quests to deal damage ⚔️")}
         </p>
       )}
     </div>

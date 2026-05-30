@@ -5,6 +5,7 @@ import { Check, Coins, Lock } from "lucide-react";
 import type { GameState } from "@/lib/types";
 import { SHOP_ITEMS, TIER_STYLE } from "@/lib/shop";
 import { playSfx } from "@/lib/sound";
+import { useT } from "@/lib/i18n";
 
 export function Shop({
   state,
@@ -15,6 +16,7 @@ export function Shop({
   onBuy: (id: string) => void;
   onEquip: (id: string | null) => void;
 }) {
+  const { t } = useT();
   const titles = SHOP_ITEMS.filter((i) => i.type === "title");
   const avatars = SHOP_ITEMS.filter((i) => i.type === "avatar");
 
@@ -79,8 +81,8 @@ export function Shop({
     <div className="space-y-6">
       <div className="flex items-center justify-between rounded-2xl border border-amber-300/30 bg-amber-400/5 p-4">
         <div>
-          <p className="font-display font-bold">Reward Shop</p>
-          <p className="text-xs text-muted">Spend coins earned from quests, bosses & daily rewards.</p>
+          <p className="font-display font-bold">{t("shop.balance", "Reward Shop")}</p>
+          <p className="text-xs text-muted">{t("shop.spend", "Spend coins earned from quests, bosses & daily rewards.")}</p>
         </div>
         <span className="flex items-center gap-1.5 rounded-xl bg-amber-400/15 px-3 py-2 font-display text-lg font-extrabold text-gold ring-1 ring-inset ring-amber-300/30">
           <Coins className="size-5" /> {state.coins.toLocaleString()}
@@ -88,7 +90,7 @@ export function Shop({
       </div>
 
       <div>
-        <h3 className="mb-3 font-display font-bold">Titles</h3>
+        <h3 className="mb-3 font-display font-bold">{t("shop.titles", "Titles")}</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {titles.map((i) => (
             <Card key={i.id} item={i} />
@@ -97,7 +99,7 @@ export function Shop({
       </div>
 
       <div>
-        <h3 className="mb-3 font-display font-bold">Premium Avatars</h3>
+        <h3 className="mb-3 font-display font-bold">{t("shop.avatars", "Premium Avatars")}</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {avatars.map((i) => (
             <Card key={i.id} item={i} />

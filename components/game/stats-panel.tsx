@@ -7,38 +7,40 @@ import {
 import type { GameState } from "@/lib/types";
 import { levelFromXp } from "@/lib/utils";
 import { nextRank, rankForLevel } from "@/lib/ranks";
+import { useT } from "@/lib/i18n";
 
 export function StatsPanel({ state }: { state: GameState }) {
+  const { t } = useT();
   const level = levelFromXp(state.totalXp);
   const rank = rankForLevel(level);
   const next = nextRank(level);
   const unlocked = state.achievements.filter((a) => a.unlocked).length;
 
   const items = [
-    { icon: Star, label: "Total XP", value: state.totalXp.toLocaleString(), color: "text-gold" },
-    { icon: Coins, label: "Coins", value: state.coins.toLocaleString(), color: "text-gold" },
-    { icon: ListChecks, label: "Quests done", value: state.counters.questsCompleted, color: "text-lime-300" },
-    { icon: Swords, label: "Bosses slain", value: state.counters.bossesDefeated, color: "text-rose-300" },
-    { icon: Flame, label: "Best streak", value: `${state.streak.best}d`, color: "text-orange-300" },
-    { icon: Dumbbell, label: "Squats", value: state.counters.squats, color: "text-rose-300" },
-    { icon: Flower2, label: "Min. stretched", value: state.counters.minutesStretched, color: "text-sky-300" },
-    { icon: Trophy, label: "Achievements", value: `${unlocked}/${state.achievements.length}`, color: "text-emerald-300" },
+    { icon: Star, label: t("stats.totalxp", "Total XP"), value: state.totalXp.toLocaleString(), color: "text-gold" },
+    { icon: Coins, label: t("stats.coins", "Coins"), value: state.coins.toLocaleString(), color: "text-gold" },
+    { icon: ListChecks, label: t("stats.questsdone", "Quests done"), value: state.counters.questsCompleted, color: "text-lime-300" },
+    { icon: Swords, label: t("stats.bosses", "Bosses slain"), value: state.counters.bossesDefeated, color: "text-rose-300" },
+    { icon: Flame, label: t("stats.beststreak", "Best streak"), value: `${state.streak.best}d`, color: "text-orange-300" },
+    { icon: Dumbbell, label: t("stats.squats", "Squats"), value: state.counters.squats, color: "text-rose-300" },
+    { icon: Flower2, label: t("stats.stretched", "Min. stretched"), value: state.counters.minutesStretched, color: "text-sky-300" },
+    { icon: Trophy, label: t("stats.achievements", "Achievements"), value: `${unlocked}/${state.achievements.length}`, color: "text-emerald-300" },
   ];
 
   return (
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <div className="mb-4 flex items-center gap-2">
         <Activity className="size-5 text-lime-300" />
-        <h3 className="font-display font-bold">Lifetime stats</h3>
+        <h3 className="font-display font-bold">{t("stats.title", "Lifetime stats")}</h3>
       </div>
 
       <div className="mb-4 rounded-xl border border-border bg-white/5 p-3">
         <div className="flex items-center justify-between text-sm">
           <span className="font-semibold">{rank.emoji} {rank.name}</span>
           {next ? (
-            <span className="text-xs text-muted">Next: {next.emoji} {next.name} (Lvl {next.minLevel})</span>
+            <span className="text-xs text-muted">{t("stats.next", "Next")}: {next.emoji} {next.name} (Lvl {next.minLevel})</span>
           ) : (
-            <span className="text-xs text-gold">Max rank reached 👑</span>
+            <span className="text-xs text-gold">{t("stats.maxrank", "Max rank reached 👑")}</span>
           )}
         </div>
         {next && (

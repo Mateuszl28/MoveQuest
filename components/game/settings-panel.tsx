@@ -73,7 +73,7 @@ export function SettingsPanel() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="rounded-2xl border border-border bg-card/60 p-5">
-          <h3 className="mb-1 font-display font-bold">Fitness level</h3>
+          <h3 className="mb-1 font-display font-bold">{t("fit.level", "Fitness level")}</h3>
           <p className="mb-4 text-xs text-muted">Scales quest targets. Changing it regenerates today&apos;s quests.</p>
           <div className="space-y-2">
             {LEVELS.map((l) => (
@@ -92,7 +92,7 @@ export function SettingsPanel() {
         </div>
 
         <div className="rounded-2xl border border-border bg-card/60 p-5">
-          <h3 className="mb-1 font-display font-bold">Difficulty pace</h3>
+          <h3 className="mb-1 font-display font-bold">{t("fit.pace", "Difficulty pace")}</h3>
           <p className="mb-4 text-xs text-muted">Biases the daily quest mix. Also regenerates quests.</p>
           <div className="space-y-2">
             {DIFFS.map((d) => (
@@ -117,8 +117,8 @@ export function SettingsPanel() {
             {state.soundEnabled ? <Volume2 className="size-5 text-lime-300" /> : <VolumeX className="size-5 text-muted" />}
           </span>
           <div>
-            <h3 className="font-display font-bold">Sound effects</h3>
-            <p className="text-xs text-muted">Cues for quests, coins and level-ups.</p>
+            <h3 className="font-display font-bold">{t("sound.title", "Sound effects")}</h3>
+            <p className="text-xs text-muted">{t("sound.sub", "Cues for quests, coins and level-ups.")}</p>
           </div>
         </div>
         <button
@@ -139,8 +139,8 @@ export function SettingsPanel() {
             {state.notificationsEnabled ? <Bell className="size-5 text-lime-300" /> : <BellOff className="size-5 text-muted" />}
           </span>
           <div>
-            <h3 className="font-display font-bold">Streak reminders</h3>
-            <p className="text-xs text-muted">A nudge when your streak is at risk or quests remain.</p>
+            <h3 className="font-display font-bold">{t("notif.title", "Streak reminders")}</h3>
+            <p className="text-xs text-muted">{t("notif.sub", "A nudge when your streak is at risk or quests remain.")}</p>
           </div>
         </div>
         <button
@@ -157,10 +157,10 @@ export function SettingsPanel() {
 
       <div className="rounded-2xl border border-rose-400/30 bg-rose-500/5 p-5">
         <h3 className="flex items-center gap-2 font-display font-bold text-rose-300">
-          <AlertTriangle className="size-4" /> Danger zone
+          <AlertTriangle className="size-4" /> {t("danger.title", "Danger zone")}
         </h3>
         <p className="mt-1 text-xs text-muted">
-          Reset wipes all XP, levels, stats, streaks and achievements. Your hero profile stays.
+          {t("danger.sub", "Reset wipes all XP, levels, stats, streaks and achievements. Your hero profile stays.")}
         </p>
         {confirmReset ? (
           <div className="mt-4 flex gap-2">
@@ -175,7 +175,7 @@ export function SettingsPanel() {
           </div>
         ) : (
           <Button variant="outline" size="sm" className="mt-4 border-rose-400/40 text-rose-300" onClick={() => setConfirmReset(true)}>
-            Reset progress
+            {t("danger.reset", "Reset progress")}
           </Button>
         )}
       </div>

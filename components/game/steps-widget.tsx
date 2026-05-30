@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Footprints, Plus, Activity, Link2 } from "lucide-react";
 import type { GameState } from "@/lib/types";
 import { dateKey } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 export function StepsWidget({
   state,
@@ -14,6 +15,7 @@ export function StepsWidget({
   onAddSteps: (n: number) => void;
   onCompleteQuest: (id: string) => void;
 }) {
+  const { t } = useT();
   const today = dateKey();
   const steps = state.steps[today] ?? 0;
   const stepQuest = state.quests.find((q) => q.stepGoal);
@@ -29,19 +31,19 @@ export function StepsWidget({
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Footprints className="size-5 text-pink-300" />
-          <h3 className="font-display font-bold">Steps today</h3>
+          <h3 className="font-display font-bold">{t("steps.title", "Steps today")}</h3>
         </div>
         <button
           onClick={fit}
           className="inline-flex items-center gap-1 rounded-lg border border-border bg-white/5 px-2 py-1 text-[11px] text-muted hover:text-foreground"
         >
-          <Link2 className="size-3" /> Connect Fit
+          <Link2 className="size-3" /> {t("steps.connect", "Connect Fit")}
         </button>
       </div>
 
       <div className="flex items-end justify-between">
         <p className="font-display text-3xl font-extrabold tabular-nums">{steps.toLocaleString()}</p>
-        <p className="text-xs text-muted">goal {goal.toLocaleString()}</p>
+        <p className="text-xs text-muted">{t("steps.goal", "goal")} {goal.toLocaleString()}</p>
       </div>
       <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-white/10">
         <motion.div
@@ -64,7 +66,7 @@ export function StepsWidget({
           onClick={() => onAddSteps(800 + Math.floor((steps % 7) * 130))}
           className="inline-flex items-center gap-1 rounded-lg border border-border bg-white/5 px-3 py-1.5 text-sm font-medium hover:bg-white/10 active:scale-95"
         >
-          <Activity className="size-3.5" /> Simulate walk
+          <Activity className="size-3.5" /> {t("steps.simulate", "Simulate walk")}
         </button>
       </div>
 

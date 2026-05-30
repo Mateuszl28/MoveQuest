@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Send, Sparkles } from "lucide-react";
 import type { GameState } from "@/lib/types";
 import { levelFromXp } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 interface Msg { role: "coach" | "user"; text: string }
 
@@ -40,6 +41,7 @@ export function Coach({ state }: { state: GameState }) {
   const [msgs, setMsgs] = useState<Msg[]>([
     { role: "coach", text: "Hey! I'm Quill, your movement coach. Ask me anything — quests, streaks, or beating today's boss. 🦉" },
   ]);
+  const { t } = useT();
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -52,15 +54,15 @@ export function Coach({ state }: { state: GameState }) {
     requestAnimationFrame(() => scrollRef.current?.scrollTo({ top: 9e9, behavior: "smooth" }));
   };
 
-  const suggestions = ["What should I do today?", "How's my streak?", "I feel lazy"];
+  const suggestions = [t("coach.s1", "What should I do today?"), t("coach.s2", "How's my streak?"), t("coach.s3", "I feel lazy")];
 
   return (
     <div className="flex h-[28rem] flex-col rounded-2xl border border-border bg-card/60">
       <div className="flex items-center gap-2 border-b border-border p-4">
         <span className="grid size-9 place-items-center rounded-xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-lg">🦉</span>
         <div>
-          <p className="font-display font-bold leading-tight">Coach Quill</p>
-          <p className="text-xs text-emerald-400">● online</p>
+          <p className="font-display font-bold leading-tight">{t("coach.name", "Coach Quill")}</p>
+          <p className="text-xs text-emerald-400">● {t("coach.online", "online")}</p>
         </div>
         <Sparkles className="ml-auto size-4 text-lime-300" />
       </div>
@@ -103,7 +105,7 @@ export function Coach({ state }: { state: GameState }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && send()}
-            placeholder="Ask your coach…"
+            placeholder={t("coach.placeholder", "Ask your coach…")}
             className="flex-1 rounded-xl border border-border bg-white/5 px-3.5 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           />
           <button

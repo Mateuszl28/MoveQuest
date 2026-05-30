@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CalendarRange, Coins, Star, Trophy } from "lucide-react";
 import { generateWeeklyChallenge, weeklyXpEarned } from "@/lib/weekly";
+import { useT } from "@/lib/i18n";
 
 export function WeeklyChallenge({
   level,
@@ -15,6 +16,7 @@ export function WeeklyChallenge({
   claimedWeeks: string[];
   onClaim: (id: string, coins: number, xp: number) => void;
 }) {
+  const { t } = useT();
   const ch = generateWeeklyChallenge(level);
   const earned = weeklyXpEarned(xpHistory);
   const pct = Math.min(100, (earned / ch.targetXp) * 100);
@@ -26,7 +28,7 @@ export function WeeklyChallenge({
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <CalendarRange className="size-5 text-lime-300" />
-          <h3 className="font-display font-bold">Weekly Challenge</h3>
+          <h3 className="font-display font-bold">{t("weekly.title", "Weekly Challenge")}</h3>
         </div>
         <span className="flex items-center gap-2 text-xs text-muted">
           <span className="inline-flex items-center gap-0.5 text-gold"><Coins className="size-3.5" />{ch.rewardCoins}</span>

@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { Swords, Trophy, Coins, Star } from "lucide-react";
 import type { Raid } from "@/lib/types";
+import { useT } from "@/lib/i18n";
 
 export function RaidBoss({ raid }: { raid: Raid | null }) {
+  const { t } = useT();
   if (!raid) return null;
   const pct = (raid.hp / raid.maxHp) * 100;
 
@@ -12,7 +14,7 @@ export function RaidBoss({ raid }: { raid: Raid | null }) {
     <div className="relative overflow-hidden rounded-2xl border border-fuchsia-400/30 bg-gradient-to-br from-fuchsia-500/12 via-card/70 to-rose-500/10 p-5">
       <div className="mb-3 flex items-center justify-between">
         <span className="inline-flex items-center gap-1 rounded-full bg-fuchsia-500/15 px-2.5 py-0.5 text-xs font-semibold text-fuchsia-200 ring-1 ring-inset ring-fuchsia-400/30">
-          <Swords className="size-3.5" /> Weekly Raid
+          <Swords className="size-3.5" /> {t("raid.weekly", "Weekly Raid")}
         </span>
         <span className="flex items-center gap-2 text-xs text-muted">
           <span className="inline-flex items-center gap-0.5 text-gold"><Star className="size-3.5" />{raid.bonusXp}</span>
@@ -49,10 +51,10 @@ export function RaidBoss({ raid }: { raid: Raid | null }) {
 
       {raid.defeated ? (
         <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-gold/30 bg-gold/10 py-2 text-sm font-semibold text-gold">
-          <Trophy className="size-4" /> Raid cleared — legendary!
+          <Trophy className="size-4" /> {t("raid.cleared", "Raid cleared — legendary!")}
         </div>
       ) : (
-        <p className="mt-4 text-center text-xs text-muted">Every quest you finish this week chips away at it ⚔️</p>
+        <p className="mt-4 text-center text-xs text-muted">{t("raid.hint", "Every quest you finish this week chips away at it ⚔️")}</p>
       )}
     </div>
   );

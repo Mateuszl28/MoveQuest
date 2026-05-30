@@ -5,6 +5,7 @@ import { Plus, Trash2, PencilLine } from "lucide-react";
 import type { CustomQuest, Difficulty, Quest } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/lib/i18n";
 
 const CATS: Quest["category"][] = ["strength", "cardio", "mobility", "wellness"];
 const DIFFS: Difficulty[] = ["easy", "medium", "hard"];
@@ -18,6 +19,7 @@ export function CustomQuests({
   onAdd: (d: { title: string; category: Quest["category"]; difficulty: Difficulty }) => void;
   onRemove: (id: string) => void;
 }) {
+  const { t } = useT();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<Quest["category"]>("strength");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
@@ -32,14 +34,14 @@ export function CustomQuests({
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <div className="mb-1 flex items-center gap-2">
         <PencilLine className="size-5 text-lime-300" />
-        <h3 className="font-display font-bold">Your own quests</h3>
+        <h3 className="font-display font-bold">{t("custom.title", "Your own quests")}</h3>
         <span className="ml-auto text-xs text-muted">{quests.length}/8</span>
       </div>
-      <p className="mb-4 text-xs text-muted">Add personal quests — they join your daily list every day.</p>
+      <p className="mb-4 text-xs text-muted">{t("custom.sub", "Add personal quests — they join your daily list every day.")}</p>
 
       <div className="space-y-3">
         <Input
-          placeholder="e.g. 30-minute swim"
+          placeholder={t("custom.placeholder", "e.g. 30-minute swim")}
           value={title}
           maxLength={40}
           onChange={(e) => setTitle(e.target.value)}
@@ -75,7 +77,7 @@ export function CustomQuests({
           disabled={title.trim().length < 2 || quests.length >= 8}
           className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-lime-300 py-2.5 text-sm font-bold text-[#15200a] disabled:opacity-40 active:scale-95"
         >
-          <Plus className="size-4" /> Add quest
+          <Plus className="size-4" /> {t("custom.add", "Add quest")}
         </button>
       </div>
 

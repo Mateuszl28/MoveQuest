@@ -187,7 +187,7 @@ export default function Dashboard() {
               <h1 className="font-display text-2xl font-extrabold leading-tight">{p.username}</h1>
               <p className="text-xs font-semibold text-lime-300">{titleText}</p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
-                <Badge>{cls.emoji} {cls.name}</Badge>
+                <Badge>{cls.emoji} {t(`class.${cls.id}.name`, cls.name)}</Badge>
                 <Badge variant="muted" className="capitalize">{p.fitnessLevel}</Badge>
                 <Badge variant="gold"><Flame className="size-3" /> {state.streak.current} day streak</Badge>
               </div>
@@ -232,9 +232,9 @@ export default function Dashboard() {
               <XpChart xpHistory={state.xpHistory} />
               <div>
                 <SectionTitle icon={<Trophy className="size-5 text-gold" />} action={
-                  <Button variant="ghost" size="sm" onClick={() => setTab("achievements")}>View all</Button>
+                  <Button variant="ghost" size="sm" onClick={() => setTab("achievements")}>{t("common.viewall", "View all")}</Button>
                 }>
-                  Achievements <span className="text-sm font-normal text-muted">({unlocked}/{state.achievements.length})</span>
+                  {t("sec.achievements", "Achievements")} <span className="text-sm font-normal text-muted">({unlocked}/{state.achievements.length})</span>
                 </SectionTitle>
                 <AchievementsGallery state={state} limit={4} />
               </div>
@@ -250,9 +250,9 @@ export default function Dashboard() {
               <FriendChallenges state={state} onClaim={claimChallenge} />
               <div className="rounded-2xl border border-border bg-card/60 p-5">
                 <SectionTitle icon={<Users className="size-5 text-emerald-300" />} action={
-                  <Button variant="ghost" size="sm" onClick={() => setTab("leaderboard")}>Full</Button>
+                  <Button variant="ghost" size="sm" onClick={() => setTab("leaderboard")}>{t("common.full", "Full")}</Button>
                 }>
-                  Leaderboard
+                  {t("sec.leaderboard", "Leaderboard")}
                 </SectionTitle>
                 <Leaderboard player={playerLb} limit={5} showControls={false} />
               </div>
@@ -275,7 +275,7 @@ export default function Dashboard() {
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="space-y-5 lg:col-span-2">
               <div>
-                <SectionTitle icon={<Dumbbell className="size-5 text-rose-300" />}>Character Progression</SectionTitle>
+                <SectionTitle icon={<Dumbbell className="size-5 text-rose-300" />}>{t("sec.character", "Character Progression")}</SectionTitle>
                 <CharacterCard stats={state.stats} />
               </div>
               <XpChart xpHistory={state.xpHistory} />
@@ -292,7 +292,7 @@ export default function Dashboard() {
 
         {tab === "shop" && (
           <div>
-            <SectionTitle icon={<ShoppingBag className="size-5 text-gold" />}>Reward Shop</SectionTitle>
+            <SectionTitle icon={<ShoppingBag className="size-5 text-gold" />}>{t("sec.shop", "Reward Shop")}</SectionTitle>
             <Shop state={state} onBuy={buyCosmetic} onEquip={equipTitle} />
           </div>
         )}
@@ -301,7 +301,7 @@ export default function Dashboard() {
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-5">
               <div>
-                <SectionTitle icon={<Settings className="size-5 text-lime-300" />}>Settings</SectionTitle>
+                <SectionTitle icon={<Settings className="size-5 text-lime-300" />}>{t("sec.settings", "Settings")}</SectionTitle>
                 <SettingsPanel />
               </div>
               <CustomQuests quests={state.customQuests} onAdd={addCustomQuest} onRemove={removeCustomQuest} />
@@ -313,7 +313,7 @@ export default function Dashboard() {
         {tab === "achievements" && (
           <div>
             <SectionTitle icon={<Trophy className="size-5 text-gold" />}>
-              Achievement Gallery <span className="text-sm font-normal text-muted">({unlocked}/{state.achievements.length})</span>
+              {t("sec.achievements", "Achievements")} <span className="text-sm font-normal text-muted">({unlocked}/{state.achievements.length})</span>
             </SectionTitle>
             <AchievementsGallery state={state} />
           </div>
@@ -321,7 +321,7 @@ export default function Dashboard() {
 
         {tab === "leaderboard" && (
           <div className="rounded-2xl border border-border bg-card/60 p-5">
-            <SectionTitle icon={<Users className="size-5 text-emerald-300" />}>Leaderboard</SectionTitle>
+            <SectionTitle icon={<Users className="size-5 text-emerald-300" />}>{t("sec.leaderboard", "Leaderboard")}</SectionTitle>
             <Leaderboard player={playerLb} />
           </div>
         )}

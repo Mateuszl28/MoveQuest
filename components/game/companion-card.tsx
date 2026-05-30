@@ -9,6 +9,7 @@ import {
   companionStageIndex,
   nextEvolutionLevel,
 } from "@/lib/companions";
+import { useT } from "@/lib/i18n";
 
 const STAGE_NAMES = ["Egg", "Hatchling", "Beast", "Legendary"];
 
@@ -21,6 +22,7 @@ export function CompanionCard({
   level: number;
   onChange: (id: string) => void;
 }) {
+  const { t } = useT();
   const def = companionById(companion);
   const stage = companionStageIndex(level);
   const emoji = companionEmoji(companion, level);
@@ -30,7 +32,7 @@ export function CompanionCard({
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <div className="mb-3 flex items-center gap-2">
         <PawPrint className="size-5 text-lime-300" />
-        <h3 className="font-display font-bold">Companion</h3>
+        <h3 className="font-display font-bold">{t("companion.title", "Companion")}</h3>
       </div>
 
       <div className="flex items-center gap-4">
@@ -45,9 +47,9 @@ export function CompanionCard({
         </motion.div>
         <div className="min-w-0 flex-1">
           <p className="font-display text-lg font-bold leading-tight">{def.name}</p>
-          <p className="text-xs font-semibold text-lime-300">{STAGE_NAMES[stage]} · stage {stage + 1}/4</p>
+          <p className="text-xs font-semibold text-lime-300">{t(`comp.stage.${stage}`, STAGE_NAMES[stage])} · {stage + 1}/4</p>
           <p className="mt-1 text-xs text-muted">
-            {next ? `Evolves at level ${next}` : "Fully evolved 👑"}
+            {next ? `${t("companion.evolves", "Evolves at level")} ${next}` : t("companion.maxed", "Fully evolved 👑")}
           </p>
         </div>
       </div>

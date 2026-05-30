@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Crown, Flame, Star, TrendingUp } from "lucide-react";
 import { buildLeaderboard, sortLeaderboard, type SortKey } from "@/lib/leaderboard";
+import { useT } from "@/lib/i18n";
 
 const SORTS: { key: SortKey; label: string; icon: typeof Star }[] = [
   { key: "xp", label: "XP", icon: Star },
@@ -24,6 +25,7 @@ export function Leaderboard({
   limit?: number;
   showControls?: boolean;
 }) {
+  const { t } = useT();
   const [sort, setSort] = useState<SortKey>("xp");
   const [scope, setScope] = useState<"global" | "friends">(initialScope);
 
@@ -47,7 +49,7 @@ export function Leaderboard({
                   scope === s ? "bg-lime-300 text-[#15200a]" : "text-muted hover:text-foreground"
                 }`}
               >
-                {s}
+                {t(`lb.${s}`, s)}
               </button>
             ))}
           </div>
@@ -87,7 +89,7 @@ export function Leaderboard({
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1.5 truncate text-sm font-semibold">
                 {e.username}
-                {e.isPlayer && <span className="text-[10px] text-lime-300">(you)</span>}
+                {e.isPlayer && <span className="text-[10px] text-lime-300">{t("lb.you", "(you)")}</span>}
                 {i === 0 && <Crown className="size-3.5 text-gold" />}
               </p>
               <p className="text-xs text-muted">Lvl {e.level} · {e.streak}🔥</p>

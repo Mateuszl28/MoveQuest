@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Flame, Snowflake } from "lucide-react";
 import type { StreakState } from "@/lib/types";
 import { dateKey } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 const MILESTONES = [3, 7, 14, 30];
 const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
@@ -21,6 +22,7 @@ export function StreakWidget({
   freezeCost?: number;
   onBuyFreeze?: () => void;
 }) {
+  const { t } = useT();
   // last 7 days (Mon-anchored visual): build from today backwards
   const today = new Date();
   const last7: { key: string; active: boolean }[] = [];
@@ -45,12 +47,12 @@ export function StreakWidget({
           </motion.div>
           <div>
             <p className="font-display text-2xl font-extrabold leading-none">{streak.current}</p>
-            <p className="text-xs text-muted">day streak</p>
+            <p className="text-xs text-muted">{t("streak.day", "day streak")}</p>
           </div>
         </div>
         <div className="text-right">
           <p className="font-display text-lg font-bold text-gold">{streak.best}</p>
-          <p className="text-xs text-muted">best</p>
+          <p className="text-xs text-muted">{t("streak.best", "best")}</p>
         </div>
       </div>
 
@@ -74,7 +76,7 @@ export function StreakWidget({
 
       <div className="mt-4">
         <div className="mb-1 flex justify-between text-xs text-muted">
-          <span>Next reward</span>
+          <span>{t("streak.nextreward", "Next reward")}</span>
           <span>{streak.current}/{nextMilestone} days</span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-white/10">
