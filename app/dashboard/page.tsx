@@ -26,6 +26,8 @@ import { SettingsPanel } from "@/components/game/settings-panel";
 import { StatsPanel } from "@/components/game/stats-panel";
 import { Shop } from "@/components/game/shop";
 import { DailyReward } from "@/components/game/daily-reward";
+import { StepsWidget } from "@/components/game/steps-widget";
+import { HeroCard } from "@/components/game/hero-card";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
 import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
@@ -65,7 +67,7 @@ export default function Dashboard() {
   const {
     state, ready, level, completeQuest, regenerateQuests, logout,
     claimChallenge, claimDailyReward, buyCosmetic, equipTitle,
-    rerollQuest, rerollCost, buyStreakFreeze, streakFreezeCost,
+    rerollQuest, rerollCost, buyStreakFreeze, streakFreezeCost, addSteps,
   } = useGame();
   const [tab, setTab] = useState("overview");
 
@@ -97,6 +99,16 @@ export default function Dashboard() {
   const cls = heroClassDef(p.heroClass);
   const equippedTitle = state.equippedTitle ? shopItemById(state.equippedTitle)?.value : null;
   const titleText = equippedTitle ?? `${rank.emoji} ${rank.name}`;
+  const heroFields = {
+    username: p.username,
+    avatar: p.avatar,
+    level,
+    xp: state.totalXp,
+    streak: state.streak.current,
+    cls: cls.name,
+    rank: rank.name,
+    badges: unlocked,
+  };
 
   const QuestsBlock = (
     <div className="rounded-2xl border border-border bg-card/60 p-5">
@@ -209,6 +221,7 @@ export default function Dashboard() {
             <div className="space-y-5">
               <DailyReward lastRewardDate={state.lastRewardDate} onClaim={claimDailyReward} />
               <BossBattle boss={state.boss} />
+              <StepsWidget state={state} onAddSteps={addSteps} onCompleteQuest={completeQuest} />
               <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
               <FriendChallenges state={state} onClaim={claimChallenge} />
               <div className="rounded-2xl border border-border bg-card/60 p-5">
@@ -243,6 +256,7 @@ export default function Dashboard() {
             <div className="space-y-5">
               <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
               <StatsPanel state={state} />
+              <HeroCard fields={heroFields} />
             </div>
           </div>
         )}

@@ -16,6 +16,7 @@ type Template = {
   difficulty: Difficulty;
   reps?: number;
   durationSec?: number;
+  stepGoal?: number;
 };
 
 /**
@@ -27,7 +28,7 @@ function buildPool(level: FitnessLevel): Template[] {
   const r = (n: number) => Math.round(n * m);
   return [
     // ---- cardio ----
-    { title: `Walk ${r(4000)} steps`, description: "Get moving and rack up your daily steps.", category: "cardio", icon: "Footprints", difficulty: "easy" },
+    { title: `Walk ${r(4000)} steps`, description: "Get moving and rack up your daily steps.", category: "cardio", icon: "Footprints", difficulty: "easy", stepGoal: r(4000) },
     { title: "15-minute walk after lunch", description: "A post-lunch stroll to keep the energy up.", category: "cardio", icon: "MapPin", difficulty: "easy", durationSec: 900 },
     { title: `Jog for ${r(20)} minutes`, description: "Steady-pace jog to build endurance.", category: "cardio", icon: "Wind", difficulty: "medium", durationSec: r(20) * 60 },
     { title: `Climb ${r(10)} flights of stairs`, description: "Take the stairs instead of the elevator.", category: "cardio", icon: "TrendingUp", difficulty: "medium" },
@@ -68,6 +69,7 @@ function makeQuest(t: Template, idx: number, dayKey: string): Quest {
     completed: false,
     reps: t.reps,
     durationSec: t.durationSec,
+    stepGoal: t.stepGoal,
   };
 }
 

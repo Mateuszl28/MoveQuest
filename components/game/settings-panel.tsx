@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Check, Volume2, VolumeX } from "lucide-react";
+import { AlertTriangle, Check, Volume2, VolumeX, Bell, BellOff } from "lucide-react";
 import { useGame } from "@/lib/game-store";
 import type { Difficulty, FitnessLevel } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -12,10 +12,28 @@ const LEVELS: FitnessLevel[] = ["beginner", "intermediate", "advanced"];
 const DIFFS: Difficulty[] = ["easy", "medium", "hard"];
 
 export function SettingsPanel() {
-  const { state, updateProfile, resetProgress, toggleSound } = useGame();
+  const { state, updateProfile, resetProgress, toggleSound, setNotifications } = useGame();
   const p = state.profile;
   const [confirmReset, setConfirmReset] = useState(false);
   if (!p) return null;
+
+  const onToggleNotifications = async () => {
+    if (state.notificationsEnabled) {
+      setNotifications(false);
+      return;
+    }
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      alert("This browser doesn't support notifications.");
+      return;
+    }
+    const perm = Notification.permission === "granted" ? "granted" : await Notification.requestPermission();
+    if (perm === "granted") {
+      setNotifications(true);
+      new Notification("MoveQuest reminders on 🔔", { body: "We'll nudge you if your streak is at risk.", icon: "/icon.svg" });
+    } else {
+      alert("Notifications were blocked. Enable them in your browser settings to get reminders.");
+    }
+  };
 
   const ownedAvatars = state.ownedCosmetics
     .map((id) => shopItemById(id))
@@ -100,6 +118,28 @@ export function SettingsPanel() {
         >
           <span
             className={`absolute top-1 size-5 rounded-full bg-white transition-transform ${state.soundEnabled ? "translate-x-6" : "translate-x-1"}`}
+          />
+        </button>
+      </div>
+
+      <div className="flex items-center justify-between rounded-2xl border border-border bg-card/60 p-5">
+        <div className="flex items-center gap-3">
+          <span className="grid size-10 place-items-center rounded-xl bg-white/5">
+            {state.notificationsEnabled ? <Bell className="size-5 text-lime-300" /> : <BellOff className="size-5 text-muted" />}
+          </span>
+          <div>
+            <h3 className="font-display font-bold">Streak reminders</h3>
+            <p className="text-xs text-muted">A nudge when your streak is at risk or quests remain.</p>
+          </div>
+        </div>
+        <button
+          onClick={onToggleNotifications}
+          role="switch"
+          aria-checked={state.notificationsEnabled}
+          className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${state.notificationsEnabled ? "bg-lime-400" : "bg-white/15"}`}
+        >
+          <span
+            className={`absolute top-1 size-5 rounded-full bg-white transition-transform ${state.notificationsEnabled ? "translate-x-6" : "translate-x-1"}`}
           />
         </button>
       </div>

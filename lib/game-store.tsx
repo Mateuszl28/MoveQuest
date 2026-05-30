@@ -55,6 +55,8 @@ function freshState(): GameState {
     lastRewardDate: null,
     soundEnabled: true,
     streakFreezes: 0,
+    notificationsEnabled: false,
+    steps: {},
   };
 }
 
@@ -73,6 +75,7 @@ function load(): GameState {
       ...base,
       ...parsed,
       counters: { ...base.counters, ...(parsed.counters ?? {}) },
+      steps: parsed.steps ?? {},
     };
   } catch {
     return freshState();
@@ -158,6 +161,10 @@ interface GameContextValue {
   buyStreakFreeze: () => void;
   rerollCost: number;
   streakFreezeCost: number;
+  /** enable/disable browser reminders */
+  setNotifications: (on: boolean) => void;
+  /** log steps for today */
+  addSteps: (n: number) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -411,6 +418,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const toggleSound = () => setState((prev) => ({ ...prev, soundEnabled: !prev.soundEnabled }));
 
+  const setNotifications = (on: boolean) =>
+    setState((prev) => ({ ...prev, notificationsEnabled: on }));
+
+  const addSteps = (n: number) =>
+    setState((prev) => {
+      const today = dateKey();
+      return { ...prev, steps: { ...prev.steps, [today]: Math.max(0, (prev.steps[today] ?? 0) + n) } };
+    });
+
   const buyCosmetic = (id: string) => {
     setState((prev) => {
       const item = shopItemById(id);
@@ -455,6 +471,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     buyStreakFreeze,
     rerollCost: REROLL_COST,
     streakFreezeCost: STREAK_FREEZE_COST,
+    setNotifications,
+    addSteps,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

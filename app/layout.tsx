@@ -5,6 +5,7 @@ import { GameProvider } from "@/lib/game-store";
 import { AchievementToast } from "@/components/game/achievement-toast";
 import { LevelUpModal } from "@/components/game/level-up-modal";
 import { PwaRegister } from "@/components/pwa-register";
+import { NotificationManager } from "@/components/notification-manager";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const display = Bricolage_Grotesque({
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <AchievementToast />
           <LevelUpModal />
           <PwaRegister />
+          <NotificationManager />
         </GameProvider>
       </body>
     </html>

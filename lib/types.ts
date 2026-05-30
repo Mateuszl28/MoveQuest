@@ -19,6 +19,8 @@ export interface Quest {
   reps?: number;
   /** if the quest is time-based, its duration in seconds (enables a timer) */
   durationSec?: number;
+  /** if the quest is step-based, the step target (links to the steps widget) */
+  stepGoal?: number;
 }
 
 export interface CharacterStats {
@@ -103,4 +105,8 @@ export interface GameState {
   soundEnabled: boolean;
   /** streak-freeze consumables that auto-save a broken streak */
   streakFreezes: number;
+  /** opt-in browser reminders */
+  notificationsEnabled: boolean;
+  /** steps logged per day, keyed by date */
+  steps: Record<string, number>;
 }
