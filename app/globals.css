@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------
+   MoveQuest design system — dark, gaming-inspired
+   purple/blue gradients · gold for XP · green for completed
+----------------------------------------------------------------- */
+@theme {
+  --color-background: #0a0915;
+  --color-surface: #120f24;
+  --color-surface-2: #181430;
+  --color-card: #14112a;
+  --color-border: #2a2350;
+  --color-foreground: #ECEAFB;
+  --color-muted: #9b94c7;
+
+  --color-primary: #8b5cf6;
+  --color-primary-foreground: #ffffff;
+  --color-accent: #3b82f6;
+  --color-violet: #a855f7;
+
+  --color-gold: #fbbf24;
+  --color-gold-soft: #fcd34d;
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-cardio: #f472b6;
+  --color-strength: #fb7185;
+  --color-mobility: #38bdf8;
+  --color-wellness: #34d399;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-geist-sans), system-ui, sans-serif;
+
+  --radius: 1rem;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(60rem 60rem at 85% -10%, rgba(139, 92, 246, 0.18), transparent 60%),
+    radial-gradient(50rem 50rem at 0% 0%, rgba(59, 130, 246, 0.14), transparent 55%),
+    radial-gradient(40rem 40rem at 50% 120%, rgba(168, 85, 247, 0.12), transparent 60%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+}
+
+/* utility helpers ------------------------------------------------ */
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--color-border);
+  backdrop-filter: blur(12px);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #c4b5fd 0%, #818cf8 45%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(120deg, #fde68a, #fbbf24 55%, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glow-primary {
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4), 0 0 40px -8px rgba(139, 92, 246, 0.55);
+}
+.glow-gold {
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.35), 0 0 36px -8px rgba(251, 191, 36, 0.5);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float 5s ease-in-out infinite; }
+
+/* thin scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: #2a2350;
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #3b3170; background-clip: content-box; }
