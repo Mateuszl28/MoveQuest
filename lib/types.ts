@@ -120,6 +120,23 @@ export interface GameState {
   customQuests: CustomQuest[];
   /** date key of the last fortune-wheel spin */
   lastSpinDate: string | null;
+  /** weekly raid boss, refreshed every week */
+  raid: Raid | null;
+  raidWeek: string | null;
+  /** date key of the last "perfect day" (all quests cleared) */
+  lastPerfectDate: string | null;
+}
+
+export interface Raid {
+  id: string;
+  name: string;
+  title: string;
+  emoji: string;
+  maxHp: number;
+  hp: number;
+  bonusXp: number;
+  bonusCoins: number;
+  defeated: boolean;
 }
 
 export interface CustomQuest {

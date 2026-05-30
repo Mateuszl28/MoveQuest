@@ -35,6 +35,7 @@ import { DailyEvent } from "@/components/game/daily-event";
 import { ActivityHeatmap } from "@/components/game/activity-heatmap";
 import { FortuneWheel } from "@/components/game/fortune-wheel";
 import { CustomQuests } from "@/components/game/custom-quests";
+import { RaidBoss } from "@/components/game/raid-boss";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
 import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
@@ -237,6 +238,7 @@ export default function Dashboard() {
             <div className="space-y-5">
               <DailyReward lastRewardDate={state.lastRewardDate} onClaim={claimDailyReward} />
               <BossBattle boss={state.boss} />
+              <RaidBoss raid={state.raid} />
               <WeeklyChallenge level={level} xpHistory={state.xpHistory} claimedWeeks={state.claimedWeeks} onClaim={claimWeekly} />
               <FortuneWheel canSpin={state.lastSpinDate !== dateKey()} onClaim={spinWheel} />
               <StepsWidget state={state} onAddSteps={addSteps} onCompleteQuest={completeQuest} />
@@ -258,7 +260,10 @@ export default function Dashboard() {
         {tab === "quests" && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2">{QuestsBlock}</div>
-            <BossBattle boss={state.boss} />
+            <div className="space-y-5">
+              <BossBattle boss={state.boss} />
+              <RaidBoss raid={state.raid} />
+            </div>
           </div>
         )}
 

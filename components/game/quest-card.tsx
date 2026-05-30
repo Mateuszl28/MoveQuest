@@ -72,6 +72,7 @@ export function QuestCard({
   };
   const finishNow = () => {
     playSfx("complete", sound);
+    if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(18);
     onComplete(quest.id);
   };
 

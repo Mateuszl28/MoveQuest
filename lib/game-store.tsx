@@ -20,6 +20,11 @@ import type {
 } from "./types";
 import { customToQuest, generateDailyQuests } from "./quests";
 import { generateDailyBoss } from "./bosses";
+import { generateRaid } from "./raid";
+import { weekId } from "./weekly";
+
+const PERFECT_DAY_XP = 100;
+const PERFECT_DAY_COINS = 50;
 import { evaluateAchievements, initialAchievements } from "./achievements";
 import { dateKey, daysBetween, levelFromXp } from "./utils";
 import { COINS_BY_DIFFICULTY, DAILY_REWARD, shopItemById } from "./shop";
@@ -70,6 +75,9 @@ function freshState(): GameState {
     claimedWeeks: [],
     customQuests: [],
     lastSpinDate: null,
+    raid: null,
+    raidWeek: null,
+    lastPerfectDate: null,
   };
 }
 
@@ -120,6 +128,11 @@ function withDailyRollover(state: GameState): GameState {
     next = { ...next, boss: generateDailyBoss(level), bossDate: today };
   }
 
+  const wid = weekId();
+  if (next.raidWeek !== wid) {
+    next = { ...next, raid: generateRaid(level, wid), raidWeek: wid };
+  }
+
   // streak: if a day was missed, a streak freeze can save it
   if (next.streak.lastActiveDate) {
     const gap = daysBetween(next.streak.lastActiveDate, today);
@@ -150,6 +163,9 @@ interface GameContextValue {
   /** set to the new level when the player just levelled up */
   levelUp: number | null;
   dismissLevelUp: () => void;
+  /** true right after clearing every quest in a day */
+  perfectDay: boolean;
+  dismissPerfectDay: () => void;
   createProfile: (p: Profile) => void;
   updateProfile: (p: Partial<Profile>) => void;
   logout: () => void;
@@ -195,6 +211,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<Achievement | null>(null);
   const [levelUp, setLevelUp] = useState<number | null>(null);
+  const [perfectDay, setPerfectDay] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // hydrate from localStorage on mount, then roll over to today
@@ -329,8 +346,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         comboMultiplier(comboCount) *
         eventXpMultiplier(event, quest.category);
       const reward = Math.round(quest.xpReward * mult);
-      const totalXp = prev.totalXp + reward;
-      const xpHistory = { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + reward };
 
       // coins reward (daily event can boost)
       let coins = prev.coins + Math.round(COINS_BY_DIFFICULTY[quest.difficulty] * eventCoinMultiplier(event));
@@ -362,36 +377,60 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         };
       }
 
-      // boss damage
+      // damage dealt (daily event can boost it) — hits both daily boss and weekly raid
+      const dmg = Math.round(quest.damage * eventDamageMultiplier(event));
+      let bonusXp = 0;
+
+      // daily boss
       let boss = prev.boss;
-      let bossBonus = 0;
       let bossesDefeated = counters.bossesDefeated;
       if (boss && !boss.defeated) {
-        const dmg = Math.round(quest.damage * eventDamageMultiplier(event));
         const hp = Math.max(0, boss.hp - dmg);
         const defeated = hp === 0;
         boss = { ...boss, hp, defeated };
         if (defeated) {
-          bossBonus = boss.bonusXp;
+          bonusXp += boss.bonusXp;
           bossesDefeated += 1;
-          coins += 40; // bonus coins for slaying the boss
+          coins += 40;
         }
       }
 
+      // weekly raid boss
+      let raid = prev.raid;
+      if (raid && !raid.defeated) {
+        const hp = Math.max(0, raid.hp - dmg);
+        const defeated = hp === 0;
+        raid = { ...raid, hp, defeated };
+        if (defeated) {
+          bonusXp += raid.bonusXp;
+          coins += raid.bonusCoins;
+        }
+      }
+
+      // perfect day: clearing every quest grants a one-time daily bonus
+      const allCleared = quests.length > 0 && quests.every((q) => q.completed);
+      const isPerfect = allCleared && prev.lastPerfectDate !== today;
+      if (isPerfect) {
+        bonusXp += PERFECT_DAY_XP;
+        coins += PERFECT_DAY_COINS;
+        setTimeout(() => setPerfectDay(true), 0);
+      }
+
+      const dayXp = reward + bonusXp;
       let next: GameState = {
         ...prev,
         quests,
-        totalXp: totalXp + bossBonus,
-        xpHistory: bossBonus
-          ? { ...xpHistory, [today]: (xpHistory[today] ?? 0) + bossBonus }
-          : xpHistory,
+        totalXp: prev.totalXp + dayXp,
+        xpHistory: { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + dayXp },
         coins,
         stats,
         counters: { ...counters, bossesDefeated },
         streak,
         boss,
+        raid,
         comboCount,
         comboLastTs: now,
+        lastPerfectDate: isPerfect ? today : prev.lastPerfectDate,
       };
 
       // achievements
@@ -428,6 +467,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   };
 
   const dismissLevelUp = () => setLevelUp(null);
+  const dismissPerfectDay = () => setPerfectDay(false);
 
   const claimDailyReward = () => {
     setState((prev) => {
@@ -553,6 +593,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     toast,
     levelUp,
     dismissLevelUp,
+    perfectDay,
+    dismissPerfectDay,
     createProfile,
     updateProfile,
     logout,

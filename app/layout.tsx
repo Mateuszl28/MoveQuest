@@ -4,6 +4,7 @@ import "./globals.css";
 import { GameProvider } from "@/lib/game-store";
 import { AchievementToast } from "@/components/game/achievement-toast";
 import { LevelUpModal } from "@/components/game/level-up-modal";
+import { PerfectDayModal } from "@/components/game/perfect-day-modal";
 import { PwaRegister } from "@/components/pwa-register";
 import { NotificationManager } from "@/components/notification-manager";
 
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <AchievementToast />
           <LevelUpModal />
+          <PerfectDayModal />
           <PwaRegister />
           <NotificationManager />
         </GameProvider>
