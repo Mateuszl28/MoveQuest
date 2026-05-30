@@ -18,7 +18,7 @@ import type {
   Profile,
   Quest,
 } from "./types";
-import { generateDailyQuests } from "./quests";
+import { customToQuest, generateDailyQuests } from "./quests";
 import { generateDailyBoss } from "./bosses";
 import { evaluateAchievements, initialAchievements } from "./achievements";
 import { dateKey, daysBetween, levelFromXp } from "./utils";
@@ -68,6 +68,8 @@ function freshState(): GameState {
     comboLastTs: 0,
     companion: "drake",
     claimedWeeks: [],
+    customQuests: [],
+    lastSpinDate: null,
   };
 }
 
@@ -103,16 +105,14 @@ function withDailyRollover(state: GameState): GameState {
   const favored = heroClassDef(profile.heroClass).favored;
 
   if (next.questsDate !== today) {
-    next = {
-      ...next,
-      quests: generateDailyQuests({
-        level: profile.fitnessLevel,
-        preference: profile.difficultyPreference,
-        streak: next.streak.current,
-        favored,
-      }),
-      questsDate: today,
-    };
+    const generated = generateDailyQuests({
+      level: profile.fitnessLevel,
+      preference: profile.difficultyPreference,
+      streak: next.streak.current,
+      favored,
+    });
+    const custom = next.customQuests.map((cq) => customToQuest(cq, today));
+    next = { ...next, quests: [...generated, ...custom], questsDate: today };
   }
 
   const level = levelFromXp(next.totalXp);
@@ -180,6 +180,12 @@ interface GameContextValue {
   setCompanion: (id: string) => void;
   /** claim the weekly challenge reward */
   claimWeekly: (id: string, rewardCoins: number, rewardXp: number) => void;
+  /** add a user-defined quest */
+  addCustomQuest: (data: { title: string; category: Quest["category"]; difficulty: Difficulty }) => void;
+  /** remove a custom quest */
+  removeCustomQuest: (id: string) => void;
+  /** apply the fortune-wheel prize (once per day) */
+  spinWheel: (prize: { coins?: number; xp?: number; freeze?: number }) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -455,6 +461,52 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const setCompanion = (id: string) => setState((prev) => ({ ...prev, companion: id }));
 
+  const addCustomQuest = (data: { title: string; category: Quest["category"]; difficulty: Difficulty }) =>
+    setState((prev) => {
+      const title = data.title.trim();
+      if (!title || prev.customQuests.length >= 8) return prev;
+      const cq = { id: `${Date.now()}-${prev.customQuests.length}`, title, category: data.category, difficulty: data.difficulty };
+      const today = dateKey();
+      // also drop it into today's list immediately
+      const liveInstance = prev.questsDate === today ? [customToQuest(cq, today)] : [];
+      return {
+        ...prev,
+        customQuests: [...prev.customQuests, cq],
+        quests: [...prev.quests, ...liveInstance],
+      };
+    });
+
+  const removeCustomQuest = (id: string) =>
+    setState((prev) => {
+      const instanceId = `${dateKey()}-custom-${id}`;
+      return {
+        ...prev,
+        customQuests: prev.customQuests.filter((c) => c.id !== id),
+        // remove today's instance unless it was already completed
+        quests: prev.quests.filter((q) => !(q.id === instanceId && !q.completed)),
+      };
+    });
+
+  const spinWheel = (prize: { coins?: number; xp?: number; freeze?: number }) =>
+    setState((prev) => {
+      const today = dateKey();
+      if (prev.lastSpinDate === today) return prev;
+      const totalXp = prev.totalXp + (prize.xp ?? 0);
+      if (prize.xp && levelFromXp(totalXp) > levelFromXp(prev.totalXp)) {
+        setTimeout(() => setLevelUp(levelFromXp(totalXp)), 0);
+      }
+      return {
+        ...prev,
+        lastSpinDate: today,
+        coins: prev.coins + (prize.coins ?? 0),
+        totalXp,
+        streakFreezes: Math.min(3, prev.streakFreezes + (prize.freeze ?? 0)),
+        xpHistory: prize.xp
+          ? { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + prize.xp }
+          : prev.xpHistory,
+      };
+    });
+
   const claimWeekly = (id: string, rewardCoins: number, rewardXp: number) =>
     setState((prev) => {
       if (prev.claimedWeeks.includes(id)) return prev;
@@ -520,6 +572,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     addSteps,
     setCompanion,
     claimWeekly,
+    addCustomQuest,
+    removeCustomQuest,
+    spinWheel,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

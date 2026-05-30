@@ -116,4 +116,15 @@ export interface GameState {
   companion: string;
   /** week ids whose weekly challenge reward was claimed */
   claimedWeeks: string[];
+  /** user-defined quests added to the daily list */
+  customQuests: CustomQuest[];
+  /** date key of the last fortune-wheel spin */
+  lastSpinDate: string | null;
+}
+
+export interface CustomQuest {
+  id: string;
+  title: string;
+  category: Quest["category"];
+  difficulty: Difficulty;
 }

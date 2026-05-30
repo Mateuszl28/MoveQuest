@@ -8,7 +8,7 @@ import {
   LogOut, RefreshCw, Star, Sparkles, Flame, Settings, ShoppingBag, Coins,
 } from "lucide-react";
 import { useGame } from "@/lib/game-store";
-import { levelFromXp, levelProgress, xpForNextLevel, xpIntoLevel, XP_PER_LEVEL } from "@/lib/utils";
+import { dateKey, levelFromXp, levelProgress, xpForNextLevel, xpIntoLevel, XP_PER_LEVEL } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +33,8 @@ import { CompanionCard } from "@/components/game/companion-card";
 import { WeeklyChallenge } from "@/components/game/weekly-challenge";
 import { DailyEvent } from "@/components/game/daily-event";
 import { ActivityHeatmap } from "@/components/game/activity-heatmap";
+import { FortuneWheel } from "@/components/game/fortune-wheel";
+import { CustomQuests } from "@/components/game/custom-quests";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
 import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
@@ -74,7 +76,7 @@ export default function Dashboard() {
     state, ready, level, completeQuest, regenerateQuests, logout,
     claimChallenge, claimDailyReward, buyCosmetic, equipTitle,
     rerollQuest, rerollCost, buyStreakFreeze, streakFreezeCost, addSteps,
-    setCompanion, claimWeekly,
+    setCompanion, claimWeekly, addCustomQuest, removeCustomQuest, spinWheel,
   } = useGame();
   const [tab, setTab] = useState("overview");
 
@@ -236,6 +238,7 @@ export default function Dashboard() {
               <DailyReward lastRewardDate={state.lastRewardDate} onClaim={claimDailyReward} />
               <BossBattle boss={state.boss} />
               <WeeklyChallenge level={level} xpHistory={state.xpHistory} claimedWeeks={state.claimedWeeks} onClaim={claimWeekly} />
+              <FortuneWheel canSpin={state.lastSpinDate !== dateKey()} onClaim={spinWheel} />
               <StepsWidget state={state} onAddSteps={addSteps} onCompleteQuest={completeQuest} />
               <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
               <FriendChallenges state={state} onClaim={claimChallenge} />
@@ -287,9 +290,12 @@ export default function Dashboard() {
 
         {tab === "settings" && (
           <div className="grid gap-5 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <SectionTitle icon={<Settings className="size-5 text-lime-300" />}>Settings</SectionTitle>
-              <SettingsPanel />
+            <div className="lg:col-span-2 space-y-5">
+              <div>
+                <SectionTitle icon={<Settings className="size-5 text-lime-300" />}>Settings</SectionTitle>
+                <SettingsPanel />
+              </div>
+              <CustomQuests quests={state.customQuests} onAdd={addCustomQuest} onRemove={removeCustomQuest} />
             </div>
             <SupportFoundation variant="card" />
           </div>

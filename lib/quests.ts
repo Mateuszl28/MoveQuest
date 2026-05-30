@@ -1,4 +1,4 @@
-import type { Difficulty, FitnessLevel, Quest } from "./types";
+import type { CustomQuest, Difficulty, FitnessLevel, Quest } from "./types";
 import {
   DAMAGE_BY_DIFFICULTY,
   XP_BY_DIFFICULTY,
@@ -70,6 +70,28 @@ function makeQuest(t: Template, idx: number, dayKey: string): Quest {
     reps: t.reps,
     durationSec: t.durationSec,
     stepGoal: t.stepGoal,
+  };
+}
+
+const CATEGORY_ICON: Record<Quest["category"], string> = {
+  strength: "Dumbbell",
+  cardio: "Footprints",
+  mobility: "Sparkles",
+  wellness: "Heart",
+};
+
+/** Turn a user-defined custom quest into a concrete daily quest instance. */
+export function customToQuest(cq: CustomQuest, day: string): Quest {
+  return {
+    id: `${day}-custom-${cq.id}`,
+    title: cq.title,
+    description: "Your custom quest.",
+    category: cq.category,
+    icon: CATEGORY_ICON[cq.category],
+    difficulty: cq.difficulty,
+    xpReward: XP_BY_DIFFICULTY[cq.difficulty],
+    damage: DAMAGE_BY_DIFFICULTY[cq.difficulty],
+    completed: false,
   };
 }
 
