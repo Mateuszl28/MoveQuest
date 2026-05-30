@@ -23,6 +23,7 @@ import { Coach } from "@/components/game/coach";
 import { XpChart } from "@/components/game/xp-chart";
 import { FriendChallenges } from "@/components/game/friend-challenges";
 import { SettingsPanel } from "@/components/game/settings-panel";
+import { StatsPanel } from "@/components/game/stats-panel";
 import { Shop } from "@/components/game/shop";
 import { DailyReward } from "@/components/game/daily-reward";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
@@ -235,7 +236,10 @@ export default function Dashboard() {
               </div>
               <XpChart xpHistory={state.xpHistory} />
             </div>
-            <StreakWidget streak={state.streak} />
+            <div className="space-y-5">
+              <StreakWidget streak={state.streak} />
+              <StatsPanel state={state} />
+            </div>
           </div>
         )}
 

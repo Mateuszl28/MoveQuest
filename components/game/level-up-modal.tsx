@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, X } from "lucide-react";
 import { useGame } from "@/lib/game-store";
+import { playSfx } from "@/lib/sound";
 
 const COLORS = ["#fbbf24", "#8b5cf6", "#3b82f6", "#22c55e", "#f472b6", "#fde68a"];
 
@@ -38,7 +39,10 @@ function Confetti() {
 }
 
 export function LevelUpModal() {
-  const { levelUp, dismissLevelUp } = useGame();
+  const { levelUp, dismissLevelUp, state } = useGame();
+  useEffect(() => {
+    if (levelUp !== null) playSfx("levelup", state.soundEnabled);
+  }, [levelUp, state.soundEnabled]);
   return (
     <AnimatePresence>
       {levelUp !== null && (

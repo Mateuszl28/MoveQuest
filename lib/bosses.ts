@@ -9,6 +9,8 @@ const ROSTER: Omit<Boss, "hp" | "maxHp" | "bonusXp" | "defeated" | "id">[] = [
   { name: "Snooze Specter", title: "Thief of Mornings", emoji: "👻" },
   { name: "Sugar Golem", title: "Craving Incarnate", emoji: "🍩" },
   { name: "Doomscroll Wraith", title: "Eater of Hours", emoji: "📱" },
+  { name: "Procrastination Phantom", title: "Master of Later", emoji: "🕳️" },
+  { name: "Junk Food Juggernaut", title: "The Greasy Colossus", emoji: "🍔" },
 ];
 
 /** A daily boss whose HP scales gently with the player's level. */

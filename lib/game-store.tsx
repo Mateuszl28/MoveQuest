@@ -42,13 +42,14 @@ function freshState(): GameState {
     questsDate: null,
     boss: null,
     bossDate: null,
-    counters: { questsCompleted: 0, squats: 0, bossesDefeated: 0, minutesStretched: 0 },
+    counters: { questsCompleted: 0, squats: 0, bossesDefeated: 0, minutesStretched: 0, dailyClaims: 0 },
     xpHistory: {},
     claimedChallenges: [],
     coins: 0,
     ownedCosmetics: [],
     equippedTitle: null,
     lastRewardDate: null,
+    soundEnabled: true,
   };
 }
 
@@ -62,7 +63,12 @@ function load(): GameState {
     const base = freshState();
     const byId = new Map(parsed.achievements?.map((a) => [a.id, a]));
     parsed.achievements = base.achievements.map((a) => byId.get(a.id) ?? a);
-    return { ...base, ...parsed };
+    // deep-merge nested objects so new fields (added in later versions) get defaults
+    return {
+      ...base,
+      ...parsed,
+      counters: { ...base.counters, ...(parsed.counters ?? {}) },
+    };
   } catch {
     return freshState();
   }
@@ -123,6 +129,8 @@ interface GameContextValue {
   buyCosmetic: (id: string) => void;
   /** equip a title cosmetic (null = level rank) */
   equipTitle: (id: string | null) => void;
+  /** toggle sound effects */
+  toggleSound: () => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -329,9 +337,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         totalXp,
         xpHistory: { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + DAILY_REWARD.xp },
         lastRewardDate: today,
+        counters: { ...prev.counters, dailyClaims: prev.counters.dailyClaims + 1 },
       };
     });
   };
+
+  const toggleSound = () => setState((prev) => ({ ...prev, soundEnabled: !prev.soundEnabled }));
 
   const buyCosmetic = (id: string) => {
     setState((prev) => {
@@ -372,6 +383,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     claimDailyReward,
     buyCosmetic,
     equipTitle,
+    toggleSound,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

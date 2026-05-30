@@ -15,6 +15,7 @@ type Template = {
   icon: string;
   difficulty: Difficulty;
   reps?: number;
+  durationSec?: number;
 };
 
 /**
@@ -27,28 +28,28 @@ function buildPool(level: FitnessLevel): Template[] {
   return [
     // ---- cardio ----
     { title: `Walk ${r(4000)} steps`, description: "Get moving and rack up your daily steps.", category: "cardio", icon: "Footprints", difficulty: "easy" },
-    { title: "15-minute walk after lunch", description: "A post-lunch stroll to keep the energy up.", category: "cardio", icon: "MapPin", difficulty: "easy" },
-    { title: `Jog for ${r(20)} minutes`, description: "Steady-pace jog to build endurance.", category: "cardio", icon: "Wind", difficulty: "medium" },
+    { title: "15-minute walk after lunch", description: "A post-lunch stroll to keep the energy up.", category: "cardio", icon: "MapPin", difficulty: "easy", durationSec: 900 },
+    { title: `Jog for ${r(20)} minutes`, description: "Steady-pace jog to build endurance.", category: "cardio", icon: "Wind", difficulty: "medium", durationSec: r(20) * 60 },
     { title: `Climb ${r(10)} flights of stairs`, description: "Take the stairs instead of the elevator.", category: "cardio", icon: "TrendingUp", difficulty: "medium" },
-    { title: `${r(30)}-minute bike ride`, description: "Outdoor or stationary — get the legs spinning.", category: "cardio", icon: "Bike", difficulty: "hard" },
+    { title: `${r(30)}-minute bike ride`, description: "Outdoor or stationary — get the legs spinning.", category: "cardio", icon: "Bike", difficulty: "hard", durationSec: r(30) * 60 },
     { title: `Do ${r(40)} jumping jacks`, description: "Quick cardio burst to wake up the body.", category: "cardio", icon: "Zap", difficulty: "easy" },
 
     // ---- strength ----
     { title: `Do ${r(20)} squats`, description: "Legs and glutes — keep your chest up.", category: "strength", icon: "Dumbbell", difficulty: "easy", reps: r(20) },
     { title: `Do ${r(15)} push-ups`, description: "Chest, shoulders and triceps. Modify on knees if needed.", category: "strength", icon: "Dumbbell", difficulty: "medium" },
-    { title: `Hold a ${r(45)}-second plank`, description: "Core stability — keep a straight line.", category: "strength", icon: "Shield", difficulty: "medium" },
+    { title: `Hold a ${r(45)}-second plank`, description: "Core stability — keep a straight line.", category: "strength", icon: "Shield", difficulty: "medium", durationSec: r(45) },
     { title: `Do ${r(30)} lunges`, description: "Alternating lunges for lower-body strength.", category: "strength", icon: "Dumbbell", difficulty: "hard" },
     { title: `${r(12)} glute bridges`, description: "Activate your posterior chain.", category: "strength", icon: "Dumbbell", difficulty: "easy" },
 
     // ---- mobility ----
-    { title: "Stretch for 10 minutes", description: "Full-body stretch to loosen up.", category: "mobility", icon: "Sparkles", difficulty: "easy" },
-    { title: "5-minute mobility flow", description: "Hips, shoulders and spine circles.", category: "mobility", icon: "Sparkles", difficulty: "easy" },
-    { title: "10-minute yoga session", description: "Flow through a short yoga sequence.", category: "mobility", icon: "Flower2", difficulty: "medium" },
+    { title: "Stretch for 10 minutes", description: "Full-body stretch to loosen up.", category: "mobility", icon: "Sparkles", difficulty: "easy", durationSec: 600 },
+    { title: "5-minute mobility flow", description: "Hips, shoulders and spine circles.", category: "mobility", icon: "Sparkles", difficulty: "easy", durationSec: 300 },
+    { title: "10-minute yoga session", description: "Flow through a short yoga sequence.", category: "mobility", icon: "Flower2", difficulty: "medium", durationSec: 600 },
     { title: "Foam-roll your legs", description: "Release tension in quads and calves.", category: "mobility", icon: "Activity", difficulty: "medium" },
 
     // ---- wellness ----
     { title: "Drink 2 liters of water", description: "Stay hydrated throughout the day.", category: "wellness", icon: "Droplets", difficulty: "easy" },
-    { title: "5 minutes of breathing", description: "Box breathing to reset your nervous system.", category: "wellness", icon: "Heart", difficulty: "easy" },
+    { title: "5 minutes of breathing", description: "Box breathing to reset your nervous system.", category: "wellness", icon: "Heart", difficulty: "easy", durationSec: 300 },
     { title: "Stand up every hour", description: "Break up sitting time with quick movement.", category: "wellness", icon: "Clock", difficulty: "medium" },
     { title: "Go to bed before 11pm", description: "Recovery is part of the quest.", category: "wellness", icon: "Moon", difficulty: "easy" },
   ];
@@ -66,6 +67,7 @@ function makeQuest(t: Template, idx: number, dayKey: string): Quest {
     damage: DAMAGE_BY_DIFFICULTY[t.difficulty],
     completed: false,
     reps: t.reps,
+    durationSec: t.durationSec,
   };
 }
 

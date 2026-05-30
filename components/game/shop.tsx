@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check, Coins, Lock } from "lucide-react";
 import type { GameState } from "@/lib/types";
 import { SHOP_ITEMS, TIER_STYLE } from "@/lib/shop";
+import { playSfx } from "@/lib/sound";
 
 export function Shop({
   state,
@@ -58,7 +59,7 @@ export function Shop({
             )
           ) : (
             <button
-              onClick={() => onBuy(item.id)}
+              onClick={() => { playSfx("coin", state.soundEnabled); onBuy(item.id); }}
               disabled={!affordable}
               className={`flex w-full items-center justify-center gap-1.5 rounded-xl py-2 text-sm font-bold transition active:scale-95 ${
                 affordable

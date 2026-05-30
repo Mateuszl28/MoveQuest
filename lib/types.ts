@@ -16,6 +16,8 @@ export interface Quest {
   damage: number;
   /** if the quest involves a countable rep (e.g. squats) */
   reps?: number;
+  /** if the quest is time-based, its duration in seconds (enables a timer) */
+  durationSec?: number;
 }
 
 export interface CharacterStats {
@@ -81,6 +83,7 @@ export interface GameState {
     squats: number;
     bossesDefeated: number;
     minutesStretched: number;
+    dailyClaims: number;
   };
   /** XP earned per day for charts, keyed by date */
   xpHistory: Record<string, number>;
@@ -94,4 +97,6 @@ export interface GameState {
   equippedTitle: string | null;
   /** date key of the last claimed daily reward */
   lastRewardDate: string | null;
+  /** sound effects on/off */
+  soundEnabled: boolean;
 }

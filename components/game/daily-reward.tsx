@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Coins, Gift, Star } from "lucide-react";
 import { DAILY_REWARD } from "@/lib/shop";
 import { dateKey } from "@/lib/utils";
+import { useGame } from "@/lib/game-store";
+import { playSfx } from "@/lib/sound";
 
 export function DailyReward({
   lastRewardDate,
@@ -12,7 +14,12 @@ export function DailyReward({
   lastRewardDate: string | null;
   onClaim: () => void;
 }) {
+  const { state } = useGame();
   const claimed = lastRewardDate === dateKey();
+  const claim = () => {
+    playSfx("claim", state.soundEnabled);
+    onClaim();
+  };
 
   return (
     <div className="overflow-hidden rounded-2xl border border-amber-300/30 bg-gradient-to-br from-amber-400/10 via-card/70 to-orange-500/10 p-5">
@@ -33,7 +40,7 @@ export function DailyReward({
         </div>
       </div>
       <button
-        onClick={onClaim}
+        onClick={claim}
         disabled={claimed}
         className={`mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-sm font-bold transition active:scale-95 ${
           claimed
