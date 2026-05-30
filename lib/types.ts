@@ -109,4 +109,11 @@ export interface GameState {
   notificationsEnabled: boolean;
   /** steps logged per day, keyed by date */
   steps: Record<string, number>;
+  /** combo: consecutive quest completions within the combo window */
+  comboCount: number;
+  comboLastTs: number;
+  /** chosen companion species id */
+  companion: string;
+  /** week ids whose weekly challenge reward was claimed */
+  claimedWeeks: string[];
 }

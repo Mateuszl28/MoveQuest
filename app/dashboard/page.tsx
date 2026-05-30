@@ -28,10 +28,14 @@ import { Shop } from "@/components/game/shop";
 import { DailyReward } from "@/components/game/daily-reward";
 import { StepsWidget } from "@/components/game/steps-widget";
 import { HeroCard } from "@/components/game/hero-card";
+import { ComboMeter } from "@/components/game/combo-meter";
+import { CompanionCard } from "@/components/game/companion-card";
+import { WeeklyChallenge } from "@/components/game/weekly-challenge";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
 import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
 import { heroClassDef } from "@/lib/classes";
+import { companionEmoji } from "@/lib/companions";
 
 function greeting() {
   const h = new Date().getHours();
@@ -68,6 +72,7 @@ export default function Dashboard() {
     state, ready, level, completeQuest, regenerateQuests, logout,
     claimChallenge, claimDailyReward, buyCosmetic, equipTitle,
     rerollQuest, rerollCost, buyStreakFreeze, streakFreezeCost, addSteps,
+    setCompanion, claimWeekly,
   } = useGame();
   const [tab, setTab] = useState("overview");
 
@@ -126,6 +131,9 @@ export default function Dashboard() {
         <span className="text-muted">{completed.length}/{state.quests.length} completed</span>
         <span className="font-semibold text-gold">+{todayXp} XP today</span>
       </div>
+      <div className="mb-3">
+        <ComboMeter count={state.comboCount} lastTs={state.comboLastTs} />
+      </div>
       <div className="space-y-2.5">
         {remaining.map((q) => (
           <QuestCard key={q.id} quest={q} onComplete={completeQuest} onReroll={rerollQuest} rerollCost={rerollCost} />
@@ -158,6 +166,9 @@ export default function Dashboard() {
               className="relative grid size-16 place-items-center rounded-2xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-3xl shadow-lg shadow-lime-400/30"
             >
               {p.avatar}
+              <span className="absolute -right-2 -top-2 grid size-7 place-items-center rounded-full bg-card text-base ring-1 ring-border" title="Your companion">
+                {companionEmoji(state.companion, level)}
+              </span>
               <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-gold px-2 py-0.5 text-[10px] font-extrabold text-amber-950 shadow">
                 LVL {level}
               </span>
@@ -221,6 +232,7 @@ export default function Dashboard() {
             <div className="space-y-5">
               <DailyReward lastRewardDate={state.lastRewardDate} onClaim={claimDailyReward} />
               <BossBattle boss={state.boss} />
+              <WeeklyChallenge level={level} xpHistory={state.xpHistory} claimedWeeks={state.claimedWeeks} onClaim={claimWeekly} />
               <StepsWidget state={state} onAddSteps={addSteps} onCompleteQuest={completeQuest} />
               <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
               <FriendChallenges state={state} onClaim={claimChallenge} />
@@ -255,6 +267,7 @@ export default function Dashboard() {
             </div>
             <div className="space-y-5">
               <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
+              <CompanionCard companion={state.companion} level={level} onChange={setCompanion} />
               <StatsPanel state={state} />
               <HeroCard fields={heroFields} />
             </div>

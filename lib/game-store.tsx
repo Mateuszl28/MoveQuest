@@ -24,6 +24,7 @@ import { evaluateAchievements, initialAchievements } from "./achievements";
 import { dateKey, daysBetween, levelFromXp } from "./utils";
 import { COINS_BY_DIFFICULTY, DAILY_REWARD, shopItemById } from "./shop";
 import { classXpMultiplier, heroClassDef } from "./classes";
+import { COMBO_WINDOW_MS, comboMultiplier } from "./combo";
 
 const STREAK_FREEZE_COST = 200;
 const REROLL_COST = 15;
@@ -57,6 +58,10 @@ function freshState(): GameState {
     streakFreezes: 0,
     notificationsEnabled: false,
     steps: {},
+    comboCount: 0,
+    comboLastTs: 0,
+    companion: "drake",
+    claimedWeeks: [],
   };
 }
 
@@ -165,6 +170,10 @@ interface GameContextValue {
   setNotifications: (on: boolean) => void;
   /** log steps for today */
   addSteps: (n: number) => void;
+  /** choose a companion species */
+  setCompanion: (id: string) => void;
+  /** claim the weekly challenge reward */
+  claimWeekly: (id: string, rewardCoins: number, rewardXp: number) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -297,8 +306,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // mark complete
       const quests = prev.quests.map((q) => (q.id === id ? { ...q, completed: true } : q));
 
-      // XP + per-day history (hero class can boost the reward)
-      const mult = classXpMultiplier(prev.profile?.heroClass, quest.category);
+      // combo: consecutive completions within the window stack a multiplier
+      const now = Date.now();
+      const comboCount = now - prev.comboLastTs <= COMBO_WINDOW_MS ? prev.comboCount + 1 : 1;
+
+      // XP + per-day history (hero class + combo boost the reward)
+      const mult = classXpMultiplier(prev.profile?.heroClass, quest.category) * comboMultiplier(comboCount);
       const reward = Math.round(quest.xpReward * mult);
       const totalXp = prev.totalXp + reward;
       const xpHistory = { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + reward };
@@ -360,6 +373,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         counters: { ...counters, bossesDefeated },
         streak,
         boss,
+        comboCount,
+        comboLastTs: now,
       };
 
       // achievements
@@ -427,6 +442,25 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       return { ...prev, steps: { ...prev.steps, [today]: Math.max(0, (prev.steps[today] ?? 0) + n) } };
     });
 
+  const setCompanion = (id: string) => setState((prev) => ({ ...prev, companion: id }));
+
+  const claimWeekly = (id: string, rewardCoins: number, rewardXp: number) =>
+    setState((prev) => {
+      if (prev.claimedWeeks.includes(id)) return prev;
+      const today = dateKey();
+      const totalXp = prev.totalXp + rewardXp;
+      if (levelFromXp(totalXp) > levelFromXp(prev.totalXp)) {
+        setTimeout(() => setLevelUp(levelFromXp(totalXp)), 0);
+      }
+      return {
+        ...prev,
+        coins: prev.coins + rewardCoins,
+        totalXp,
+        xpHistory: { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + rewardXp },
+        claimedWeeks: [...prev.claimedWeeks, id],
+      };
+    });
+
   const buyCosmetic = (id: string) => {
     setState((prev) => {
       const item = shopItemById(id);
@@ -473,6 +507,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     streakFreezeCost: STREAK_FREEZE_COST,
     setNotifications,
     addSteps,
+    setCompanion,
+    claimWeekly,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
