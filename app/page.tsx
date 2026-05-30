@@ -25,7 +25,7 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 }
 
 const FEATURES = [
-  { icon: BrainCircuit, title: "Adaptive Quests", desc: "A smart engine crafts daily challenges tuned to your level, streak and difficulty preference.", color: "text-violet-300" },
+  { icon: BrainCircuit, title: "Adaptive Quests", desc: "A smart engine crafts daily challenges tuned to your level, streak and difficulty preference.", color: "text-lime-300" },
   { icon: Zap, title: "XP & Levels", desc: "Every quest earns XP. Watch your level climb and your progress bar fill with each victory.", color: "text-amber-300" },
   { icon: ChartNoAxesColumn, title: "RPG Stats", desc: "Build Strength, Endurance, Agility and Consistency — visualised on a living radar chart.", color: "text-sky-300" },
   { icon: Flame, title: "Streaks", desc: "Show up daily, build unstoppable streaks, and unlock milestone rewards at 3, 7, 14 & 30 days.", color: "text-orange-300" },
@@ -43,7 +43,7 @@ const ACHIEVEMENTS = [
   { icon: Footprints, name: "First Steps", tier: "Bronze", color: "from-orange-300 to-amber-600" },
   { icon: Dumbbell, name: "Squat Warrior", tier: "Silver", color: "from-slate-200 to-slate-400" },
   { icon: Flame, name: "7-Day Hero", tier: "Gold", color: "from-amber-300 to-amber-500" },
-  { icon: Star, name: "XP Master", tier: "Legendary", color: "from-fuchsia-400 to-violet-600" },
+  { icon: Star, name: "XP Master", tier: "Legendary", color: "from-fuchsia-400 to-lime-500" },
 ];
 
 const BOSSES = [
@@ -65,8 +65,8 @@ export default function Landing() {
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5">
           <Link href="/" className="flex items-center gap-2 font-display text-lg font-extrabold">
-            <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 shadow-lg shadow-violet-500/30">
-              <Swords className="size-5 text-white" />
+            <span className="grid size-9 place-items-center rounded-xl bg-lime-300 shadow-[0_8px_24px_-10px_rgba(163,230,53,0.8)]">
+              <Swords className="size-5 text-[#15200a]" />
             </span>
             Move<span className="text-gradient">Quest</span>
           </Link>
@@ -122,7 +122,7 @@ export default function Landing() {
             <div className="animate-float glass glow-primary rounded-3xl p-5 text-left">
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-violet-500 to-blue-500 text-2xl">🦸</span>
+                  <span className="grid size-12 place-items-center rounded-2xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-2xl">🦸</span>
                   <div>
                     <p className="font-display font-bold">Level 12 Adventurer</p>
                     <p className="text-xs text-muted">5,940 XP · 9-day streak 🔥</p>
@@ -131,7 +131,7 @@ export default function Landing() {
                 <Badge variant="gold"><Star className="size-3.5" /> +75 XP</Badge>
               </div>
               <div className="mb-4 h-3 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full w-[68%] rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500 shadow-[0_0_18px_-2px_rgba(139,92,246,0.8)]" />
+                <div className="h-full w-[68%] rounded-full bg-gradient-to-r from-lime-300 to-lime-500 shadow-[0_0_18px_-2px_rgba(139,92,246,0.8)]" />
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {[
@@ -183,8 +183,8 @@ export default function Landing() {
             <Reveal key={s.n} delay={i * 0.08}>
               <div className="relative h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur">
                 <span className="absolute right-5 top-5 font-display text-5xl font-black text-white/5">{s.n}</span>
-                <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-blue-500/20 ring-1 ring-inset ring-white/10">
-                  <s.icon className="size-6 text-violet-300" />
+                <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-lime-400/20 to-lime-500/20 ring-1 ring-inset ring-white/10">
+                  <s.icon className="size-6 text-lime-300" />
                 </div>
                 <h3 className="font-display text-xl font-bold">{s.title}</h3>
                 <p className="mt-2 text-muted">{s.desc}</p>
@@ -205,7 +205,7 @@ export default function Landing() {
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f, i) => (
             <Reveal key={f.title} delay={(i % 3) * 0.06}>
-              <div className="group h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur transition-colors hover:border-violet-400/40">
+              <div className="group h-full rounded-2xl border border-border bg-card/60 p-6 backdrop-blur transition-colors hover:border-lime-400/40">
                 <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-white/5 ring-1 ring-inset ring-white/10 transition-transform group-hover:scale-110">
                   <f.icon className={`size-6 ${f.color}`} />
                 </div>
@@ -242,7 +242,7 @@ export default function Landing() {
 
       {/* BOSSES */}
       <section id="bosses" className="mx-auto max-w-6xl px-4 py-20">
-        <div className="overflow-hidden rounded-3xl border border-rose-400/20 bg-gradient-to-br from-rose-500/10 via-card/60 to-violet-500/10 p-8 backdrop-blur md:p-12">
+        <div className="overflow-hidden rounded-3xl border border-rose-400/20 bg-gradient-to-br from-rose-500/10 via-card/60 to-lime-400/10 p-8 backdrop-blur md:p-12">
           <Reveal>
             <div className="text-center">
               <Badge variant="hard" className="mx-auto mb-4"><Swords className="size-3.5" /> Daily Boss Battle</Badge>
@@ -309,7 +309,7 @@ export default function Landing() {
 
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-4 pb-24">
-        <div className="relative overflow-hidden rounded-3xl border border-violet-400/30 bg-gradient-to-br from-violet-600/30 via-indigo-600/20 to-blue-600/30 p-10 text-center md:p-16">
+        <div className="relative overflow-hidden rounded-3xl border border-lime-400/30 bg-gradient-to-br from-lime-500/15 via-emerald-500/10 to-lime-400/15 p-10 text-center md:p-16">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(40rem_20rem_at_50%_-20%,rgba(255,255,255,0.15),transparent)]" />
           <Reveal>
             <h2 className="font-display text-3xl font-extrabold md:text-5xl">Your quest begins today</h2>
@@ -330,7 +330,7 @@ export default function Landing() {
       <footer className="border-t border-border/60 py-10">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 text-sm text-muted md:flex-row">
           <div className="flex items-center gap-2 font-display font-bold text-foreground">
-            <Swords className="size-4 text-violet-400" /> MoveQuest
+            <Swords className="size-4 text-lime-400" /> MoveQuest
           </div>
           <p>Built for movement. © 2026 MoveQuest.</p>
         </div>

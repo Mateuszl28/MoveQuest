@@ -8,7 +8,7 @@ import { StatRadar } from "./stat-radar";
 const STAT_META = [
   { key: "strength", label: "Strength", icon: Dumbbell, color: "from-rose-400 to-red-500", text: "text-rose-300" },
   { key: "endurance", label: "Endurance", icon: Wind, color: "from-pink-400 to-fuchsia-500", text: "text-pink-300" },
-  { key: "agility", label: "Agility", icon: Sparkles, color: "from-sky-400 to-blue-500", text: "text-sky-300" },
+  { key: "agility", label: "Agility", icon: Sparkles, color: "from-sky-400 to-lime-500", text: "text-sky-300" },
   { key: "consistency", label: "Consistency", icon: CalendarCheck, color: "from-emerald-400 to-green-500", text: "text-emerald-300" },
 ] as const;
 

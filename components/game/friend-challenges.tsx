@@ -21,7 +21,7 @@ export function FriendChallenges({
   return (
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <div className="mb-3 flex items-center gap-2">
-        <Swords className="size-5 text-violet-300" />
+        <Swords className="size-5 text-lime-300" />
         <h3 className="font-display font-bold">Friend Challenges</h3>
       </div>
       <div className="space-y-3">
@@ -47,7 +47,7 @@ export function FriendChallenges({
               <div className="mt-2.5 flex items-center gap-2">
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
                   <motion.div
-                    className={`h-full rounded-full ${won ? "bg-gradient-to-r from-emerald-400 to-green-500" : "bg-gradient-to-r from-violet-500 to-blue-500"}`}
+                    className={`h-full rounded-full ${won ? "bg-gradient-to-r from-emerald-400 to-green-500" : "bg-gradient-to-r from-lime-400 to-lime-300"}`}
                     animate={{ width: `${progress * 100}%` }}
                   />
                 </div>

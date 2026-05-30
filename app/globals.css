@@ -1,27 +1,29 @@
 @import "tailwindcss";
 
-/* ----------------------------------------------------------------
-   MoveQuest design system — dark, gaming-inspired
-   purple/blue gradients · gold for XP · green for completed
------------------------------------------------------------------ */
+/* ================================================================
+   MoveQuest design system
+   Ink near-black · one signature accent (lime) · gold only for XP/coins
+   Restrained, high-contrast, tactile. Built to feel hand-made.
+================================================================ */
 @theme {
-  --color-background: #0a0915;
-  --color-surface: #120f24;
-  --color-surface-2: #181430;
-  --color-card: #14112a;
-  --color-border: #2a2350;
-  --color-foreground: #ECEAFB;
-  --color-muted: #9b94c7;
+  --color-background: #0a0b0d;
+  --color-surface: #121419;
+  --color-surface-2: #181b21;
+  --color-card: #111317;
+  --color-border: #24272e;
+  --color-foreground: #eceef1;
+  --color-muted: #868d97;
 
-  --color-primary: #8b5cf6;
-  --color-primary-foreground: #ffffff;
-  --color-accent: #3b82f6;
-  --color-violet: #a855f7;
+  /* signature accent */
+  --color-accent: #bef264;        /* lime-300 */
+  --color-accent-strong: #a3e635; /* lime-400 */
+  --color-accent-ink: #15200a;    /* text on accent */
 
-  --color-gold: #fbbf24;
-  --color-gold-soft: #fcd34d;
-  --color-success: #22c55e;
-  --color-danger: #ef4444;
+  --color-gold: #f5b73c;
+  --color-success: #a3e635;
+  --color-danger: #fb5b4a;
+
+  /* quest category hues (kept for meaningful colour-coding) */
   --color-cardio: #f472b6;
   --color-strength: #fb7185;
   --color-mobility: #38bdf8;
@@ -41,59 +43,84 @@
   border-color: var(--color-border);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
+  position: relative;
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
   -webkit-font-smoothing: antialiased;
-  background-image:
-    radial-gradient(60rem 60rem at 85% -10%, rgba(139, 92, 246, 0.18), transparent 60%),
-    radial-gradient(50rem 50rem at 0% 0%, rgba(59, 130, 246, 0.14), transparent 55%),
-    radial-gradient(40rem 40rem at 50% 120%, rgba(168, 85, 247, 0.12), transparent 60%);
-  background-attachment: fixed;
+  text-rendering: optimizeLegibility;
   min-height: 100dvh;
+  background-image:
+    radial-gradient(48rem 38rem at 100% -12%, rgba(190, 242, 100, 0.08), transparent 60%),
+    radial-gradient(38rem 38rem at -8% 108%, rgba(52, 211, 153, 0.05), transparent 60%);
+  background-attachment: fixed;
 }
 
-/* utility helpers ------------------------------------------------ */
+/* fine film grain for tactility — fixed so it doesn't scroll */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body > * { position: relative; z-index: 1; }
+
+/* ---- helpers --------------------------------------------------- */
 .glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  background: rgba(255, 255, 255, 0.025);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
 }
 
 .text-gradient {
-  background: linear-gradient(120deg, #c4b5fd 0%, #818cf8 45%, #60a5fa 100%);
+  background: linear-gradient(98deg, #ecfccb 0%, #bef264 45%, #84cc16 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .text-gold-gradient {
-  background: linear-gradient(120deg, #fde68a, #fbbf24 55%, #f59e0b);
+  background: linear-gradient(100deg, #fde68a, #f5b73c 55%, #d97706);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
+/* the one accent surface: solid lime with ink text */
+.btn-accent {
+  background: linear-gradient(180deg, #cdfa6a, #a3e635);
+  color: var(--color-accent-ink);
+}
+
 .glow-primary {
-  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.4), 0 0 40px -8px rgba(139, 92, 246, 0.55);
+  box-shadow: 0 0 0 1px rgba(163, 230, 53, 0.25), 0 18px 40px -22px rgba(163, 230, 53, 0.55);
 }
 .glow-gold {
-  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.35), 0 0 36px -8px rgba(251, 191, 36, 0.5);
+  box-shadow: 0 0 0 1px rgba(245, 183, 60, 0.22), 0 18px 40px -22px rgba(245, 183, 60, 0.5);
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 }
-.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-float { animation: float 6s ease-in-out infinite; }
 
-/* thin scrollbar */
+/* selection + scrollbar */
+::selection { background: rgba(163, 230, 53, 0.3); color: #fff; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb {
-  background: #2a2350;
+  background: #2a2e36;
   border-radius: 99px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
-::-webkit-scrollbar-thumb:hover { background: #3b3170; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: #3a3f49; background-clip: content-box; }

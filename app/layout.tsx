@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Sora } from "next/font/google";
+import { Geist, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
 import { GameProvider } from "@/lib/game-store";
 import { AchievementToast } from "@/components/game/achievement-toast";
@@ -7,7 +7,11 @@ import { LevelUpModal } from "@/components/game/level-up-modal";
 import { PwaRegister } from "@/components/pwa-register";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const display = Sora({ variable: "--font-display", subsets: ["latin"], weight: ["600", "700", "800"] });
+const display = Bricolage_Grotesque({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "MoveQuest — Turn Real-Life Movement Into Epic Adventures",

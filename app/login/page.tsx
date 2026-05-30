@@ -61,7 +61,7 @@ export default function Onboarding() {
     <main className="flex min-h-dvh flex-1 flex-col">
       <header className="mx-auto flex w-full max-w-md items-center justify-between px-4 py-5">
         <Link href="/" className="flex items-center gap-2 font-display font-extrabold">
-          <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-violet-500 to-blue-500">
+          <span className="grid size-8 place-items-center rounded-lg bg-lime-400/15 ring-1 ring-inset ring-lime-400/30">
             <Swords className="size-4 text-white" />
           </span>
           Move<span className="text-gradient">Quest</span>
@@ -75,7 +75,7 @@ export default function Onboarding() {
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? "bg-gradient-to-r from-violet-500 to-blue-500" : "bg-white/10"}`}
+              className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? "bg-lime-400/15 ring-1 ring-inset ring-lime-400/30" : "bg-white/10"}`}
             />
           ))}
         </div>
@@ -114,7 +114,7 @@ export default function Onboarding() {
                       onClick={() => setAvatar(a)}
                       className={`grid aspect-square place-items-center rounded-xl border text-2xl transition-all ${
                         avatar === a
-                          ? "border-violet-400 bg-violet-500/20 scale-105"
+                          ? "border-lime-400 bg-lime-400/20 scale-105"
                           : "border-border bg-white/5 hover:bg-white/10"
                       }`}
                     >
@@ -152,7 +152,7 @@ export default function Onboarding() {
                       onClick={() => setFitnessLevel(l.value)}
                       className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all ${
                         fitnessLevel === l.value
-                          ? "border-violet-400 bg-violet-500/15"
+                          ? "border-lime-400 bg-lime-400/15"
                           : "border-border bg-white/5 hover:bg-white/10"
                       }`}
                     >
@@ -161,7 +161,7 @@ export default function Onboarding() {
                         <span className="block font-semibold">{l.label}</span>
                         <span className="block text-xs text-muted">{l.desc}</span>
                       </span>
-                      {fitnessLevel === l.value && <Check className="size-5 text-violet-300" />}
+                      {fitnessLevel === l.value && <Check className="size-5 text-lime-300" />}
                     </button>
                   ))}
                 </div>
@@ -181,7 +181,7 @@ export default function Onboarding() {
                     onClick={() => setDifficultyPreference(d.value)}
                     className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all ${
                       difficultyPreference === d.value
-                        ? "border-violet-400 bg-violet-500/15"
+                        ? "border-lime-400 bg-lime-400/15"
                         : "border-border bg-white/5 hover:bg-white/10"
                     }`}
                   >
@@ -189,7 +189,7 @@ export default function Onboarding() {
                       <span className="block font-semibold">{d.label}</span>
                       <span className="block text-xs text-muted">{d.desc}</span>
                     </span>
-                    {difficultyPreference === d.value && <Check className="size-5 text-violet-300" />}
+                    {difficultyPreference === d.value && <Check className="size-5 text-lime-300" />}
                   </button>
                 ))}
               </div>
@@ -197,7 +197,7 @@ export default function Onboarding() {
               <div className="mt-7 rounded-2xl border border-border bg-card/60 p-4">
                 <p className="text-sm text-muted">Your hero</p>
                 <div className="mt-2 flex items-center gap-3">
-                  <span className="grid size-12 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 text-2xl">{avatar}</span>
+                  <span className="grid size-12 place-items-center rounded-xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-2xl">{avatar}</span>
                   <div>
                     <p className="font-display font-bold">{username || "Adventurer"}</p>
                     <p className="text-xs text-muted capitalize">{fitnessLevel} · {difficultyPreference} pace</p>

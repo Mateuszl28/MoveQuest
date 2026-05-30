@@ -7,7 +7,7 @@ interface ProgressProps {
   value: number; // 0..100
   className?: string;
   barClassName?: string;
-  /** show an animated shimmer on the bar */
+  /** show an accent glow on the bar */
   glow?: boolean;
 }
 
@@ -16,14 +16,14 @@ export function Progress({ value, className, barClassName, glow }: ProgressProps
   return (
     <div
       className={cn(
-        "relative h-3 w-full overflow-hidden rounded-full bg-white/8 ring-1 ring-inset ring-white/5",
+        "relative h-3 w-full overflow-hidden rounded-full bg-white/[0.06] ring-1 ring-inset ring-white/[0.04]",
         className,
       )}
     >
       <motion.div
         className={cn(
-          "h-full rounded-full bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500",
-          glow && "shadow-[0_0_18px_-2px_rgba(139,92,246,0.8)]",
+          "h-full rounded-full bg-gradient-to-r from-lime-400 to-lime-300",
+          glow && "shadow-[0_0_16px_-2px_rgba(163,230,53,0.85)]",
           barClassName,
         )}
         initial={{ width: 0 }}

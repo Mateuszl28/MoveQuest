@@ -44,7 +44,7 @@ export function Leaderboard({
                 key={s}
                 onClick={() => setScope(s)}
                 className={`rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
-                  scope === s ? "bg-violet-500/80 text-white" : "text-muted hover:text-foreground"
+                  scope === s ? "bg-lime-300 text-[#15200a]" : "text-muted hover:text-foreground"
                 }`}
               >
                 {s}
@@ -76,7 +76,7 @@ export function Leaderboard({
             animate={{ opacity: 1, x: 0 }}
             className={`flex items-center gap-3 rounded-xl border p-2.5 ${
               e.isPlayer
-                ? "border-violet-400/50 bg-violet-500/15 ring-1 ring-violet-400/30"
+                ? "border-lime-400/50 bg-lime-400/15 ring-1 ring-lime-400/30"
                 : "border-border bg-white/5"
             }`}
           >
@@ -87,7 +87,7 @@ export function Leaderboard({
             <div className="min-w-0 flex-1">
               <p className="flex items-center gap-1.5 truncate text-sm font-semibold">
                 {e.username}
-                {e.isPlayer && <span className="text-[10px] text-violet-300">(you)</span>}
+                {e.isPlayer && <span className="text-[10px] text-lime-300">(you)</span>}
                 {i === 0 && <Crown className="size-3.5 text-gold" />}
               </p>
               <p className="text-xs text-muted">Lvl {e.level} · {e.streak}🔥</p>

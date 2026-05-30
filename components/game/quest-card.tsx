@@ -81,8 +81,8 @@ export function QuestCard({
         quest.completed
           ? "border-emerald-500/30 bg-emerald-500/10"
           : timing
-            ? "border-violet-400/50 bg-violet-500/10"
-            : "border-border bg-card/60 hover:border-violet-400/40"
+            ? "border-lime-400/50 bg-lime-400/10"
+            : "border-border bg-card/60 hover:border-lime-400/40"
       }`}
     >
       <div
@@ -98,7 +98,7 @@ export function QuestCard({
           {quest.title}
         </p>
         {timing ? (
-          <p className="mt-0.5 font-display text-lg font-extrabold tabular-nums text-violet-200">
+          <p className="mt-0.5 font-display text-lg font-extrabold tabular-nums text-lime-200">
             {fmt(remaining!)}
           </p>
         ) : (
@@ -127,7 +127,7 @@ export function QuestCard({
           <button
             onClick={() => setRunning((r) => !r)}
             aria-label={running ? "Pause" : "Resume"}
-            className="grid size-10 place-items-center rounded-xl border border-border bg-white/5 text-violet-200 active:scale-90"
+            className="grid size-10 place-items-center rounded-xl border border-border bg-white/5 text-lime-200 active:scale-90"
           >
             {running ? <Pause className="size-4" /> : <Play className="size-4" />}
           </button>
@@ -142,7 +142,7 @@ export function QuestCard({
       ) : quest.durationSec ? (
         <button
           onClick={startTimer}
-          className="flex shrink-0 items-center gap-1.5 rounded-xl border border-violet-400/40 bg-violet-500/15 px-3 py-2 text-sm font-semibold text-violet-200 transition active:scale-90"
+          className="flex shrink-0 items-center gap-1.5 rounded-xl border border-lime-400/40 bg-lime-400/15 px-3 py-2 text-sm font-semibold text-lime-200 transition active:scale-90"
         >
           <Play className="size-4" /> Start
         </button>

@@ -57,12 +57,12 @@ export function Coach({ state }: { state: GameState }) {
   return (
     <div className="flex h-[28rem] flex-col rounded-2xl border border-border bg-card/60">
       <div className="flex items-center gap-2 border-b border-border p-4">
-        <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 text-lg">🦉</span>
+        <span className="grid size-9 place-items-center rounded-xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-lg">🦉</span>
         <div>
           <p className="font-display font-bold leading-tight">Coach Quill</p>
           <p className="text-xs text-emerald-400">● online</p>
         </div>
-        <Sparkles className="ml-auto size-4 text-violet-300" />
+        <Sparkles className="ml-auto size-4 text-lime-300" />
       </div>
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
@@ -76,7 +76,7 @@ export function Coach({ state }: { state: GameState }) {
             <div
               className={`max-w-[80%] rounded-2xl px-3.5 py-2 text-sm ${
                 m.role === "user"
-                  ? "bg-gradient-to-r from-violet-500 to-blue-500 text-white"
+                  ? "bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-white"
                   : "border border-border bg-white/5"
               }`}
             >
@@ -108,7 +108,7 @@ export function Coach({ state }: { state: GameState }) {
           />
           <button
             onClick={send}
-            className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-r from-violet-500 to-blue-500 text-white active:scale-90"
+            className="grid size-10 shrink-0 place-items-center rounded-xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-white active:scale-90"
           >
             <Send className="size-4" />
           </button>

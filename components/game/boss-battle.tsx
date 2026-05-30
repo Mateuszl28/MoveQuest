@@ -34,7 +34,7 @@ export function BossBattle({ boss }: { boss: Boss | null }) {
   const pct = (boss.hp / boss.maxHp) * 100;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-rose-400/25 bg-gradient-to-br from-rose-500/10 via-card/70 to-violet-500/10 p-5">
+    <div className="relative overflow-hidden rounded-2xl border border-rose-400/25 bg-gradient-to-br from-rose-500/10 via-card/70 to-lime-400/10 p-5">
       <div className="mb-3 flex items-center justify-between">
         <Badge variant="hard"><Swords className="size-3.5" /> Daily Boss</Badge>
         <span className="text-xs text-muted">+{boss.bonusXp} XP on defeat</span>

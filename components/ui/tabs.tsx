@@ -35,14 +35,14 @@ export function Tabs({
             key={t.value}
             onClick={() => onChange(t.value)}
             className={cn(
-              "relative flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors",
-              active ? "text-white" : "text-muted hover:text-foreground",
+              "relative flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors",
+              active ? "text-[#15200a]" : "text-muted hover:text-foreground",
             )}
           >
             {active && (
               <motion.span
                 layoutId="tab-pill"
-                className="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-500/90 to-blue-500/90 shadow-lg shadow-violet-500/25"
+                className="absolute inset-0 rounded-xl bg-lime-300 shadow-[0_8px_24px_-10px_rgba(163,230,53,0.8)]"
                 transition={{ type: "spring", stiffness: 300, damping: 28 }}
               />
             )}

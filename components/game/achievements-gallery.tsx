@@ -10,7 +10,7 @@ const TIER: Record<string, { ring: string; grad: string; label: string }> = {
   bronze: { ring: "ring-orange-400/40", grad: "from-orange-300 to-amber-600", label: "Bronze" },
   silver: { ring: "ring-slate-300/40", grad: "from-slate-200 to-slate-400", label: "Silver" },
   gold: { ring: "ring-amber-300/50", grad: "from-amber-300 to-amber-500", label: "Gold" },
-  legendary: { ring: "ring-fuchsia-400/50", grad: "from-fuchsia-400 to-violet-600", label: "Legendary" },
+  legendary: { ring: "ring-fuchsia-400/50", grad: "from-fuchsia-400 to-lime-500", label: "Legendary" },
 };
 
 export function AchievementsGallery({
@@ -57,7 +57,7 @@ export function AchievementsGallery({
             {!unlocked && (
               <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-500"
+                  className="h-full rounded-full bg-lime-400/15 ring-1 ring-inset ring-lime-400/30"
                   style={{ width: `${Math.round(progress * 100)}%` }}
                 />
               </div>

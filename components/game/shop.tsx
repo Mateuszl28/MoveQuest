@@ -46,7 +46,7 @@ export function Shop({
                 onClick={() => onEquip(equipped ? null : item.id)}
                 className={`flex w-full items-center justify-center gap-1.5 rounded-xl py-2 text-sm font-bold transition active:scale-95 ${
                   equipped
-                    ? "bg-violet-500/20 text-violet-200 ring-1 ring-inset ring-violet-400/40"
+                    ? "bg-lime-400/20 text-lime-200 ring-1 ring-inset ring-lime-400/40"
                     : "border border-border bg-white/5 hover:bg-white/10"
                 }`}
               >

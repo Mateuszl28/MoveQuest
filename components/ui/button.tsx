@@ -3,18 +3,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97] [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold tracking-tight transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:translate-y-px [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
+        // signature: solid lime, ink text
         default:
-          "bg-gradient-to-r from-violet-500 to-blue-500 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:brightness-110",
+          "bg-lime-300 text-[#15200a] shadow-[0_10px_30px_-12px_rgba(163,230,53,0.7)] hover:bg-lime-200",
         gold:
-          "bg-gradient-to-r from-amber-300 to-amber-500 text-amber-950 shadow-lg shadow-amber-500/25 hover:brightness-105",
+          "bg-amber-300 text-amber-950 shadow-[0_10px_30px_-12px_rgba(245,183,60,0.7)] hover:bg-amber-200",
         success:
-          "bg-gradient-to-r from-emerald-400 to-green-500 text-emerald-950 shadow-lg shadow-emerald-500/25 hover:brightness-105",
+          "bg-emerald-400 text-emerald-950 hover:bg-emerald-300",
         outline:
-          "border border-border bg-white/5 text-foreground hover:bg-white/10",
+          "border border-border bg-white/[0.03] text-foreground hover:border-lime-400/40 hover:bg-white/[0.06]",
         ghost: "text-muted hover:bg-white/5 hover:text-foreground",
         secondary: "bg-surface-2 text-foreground hover:bg-surface-2/70 border border-border",
       },

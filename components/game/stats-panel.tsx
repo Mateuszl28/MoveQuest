@@ -17,7 +17,7 @@ export function StatsPanel({ state }: { state: GameState }) {
   const items = [
     { icon: Star, label: "Total XP", value: state.totalXp.toLocaleString(), color: "text-gold" },
     { icon: Coins, label: "Coins", value: state.coins.toLocaleString(), color: "text-gold" },
-    { icon: ListChecks, label: "Quests done", value: state.counters.questsCompleted, color: "text-violet-300" },
+    { icon: ListChecks, label: "Quests done", value: state.counters.questsCompleted, color: "text-lime-300" },
     { icon: Swords, label: "Bosses slain", value: state.counters.bossesDefeated, color: "text-rose-300" },
     { icon: Flame, label: "Best streak", value: `${state.streak.best}d`, color: "text-orange-300" },
     { icon: Dumbbell, label: "Squats", value: state.counters.squats, color: "text-rose-300" },
@@ -28,7 +28,7 @@ export function StatsPanel({ state }: { state: GameState }) {
   return (
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <div className="mb-4 flex items-center gap-2">
-        <Activity className="size-5 text-violet-300" />
+        <Activity className="size-5 text-lime-300" />
         <h3 className="font-display font-bold">Lifetime stats</h3>
       </div>
 
@@ -44,7 +44,7 @@ export function StatsPanel({ state }: { state: GameState }) {
         {next && (
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-500"
+              className="h-full rounded-full bg-lime-400/15 ring-1 ring-inset ring-lime-400/30"
               animate={{ width: `${Math.min(100, (level / next.minLevel) * 100)}%` }}
             />
           </div>

@@ -80,7 +80,7 @@ export default function Dashboard() {
     return (
       <div className="grid flex-1 place-items-center">
         <div className="flex items-center gap-3 text-muted">
-          <Sparkles className="size-5 animate-pulse text-violet-400" /> Loading your quest…
+          <Sparkles className="size-5 animate-pulse text-lime-400" /> Loading your quest…
         </div>
       </div>
     );
@@ -98,7 +98,7 @@ export default function Dashboard() {
   const QuestsBlock = (
     <div className="rounded-2xl border border-border bg-card/60 p-5">
       <SectionTitle
-        icon={<Swords className="size-5 text-violet-300" />}
+        icon={<Swords className="size-5 text-lime-300" />}
         action={
           <Button variant="ghost" size="sm" onClick={regenerateQuests}>
             <RefreshCw className="size-3.5" /> New set
@@ -134,13 +134,13 @@ export default function Dashboard() {
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-24 pt-5">
       {/* HEADER */}
-      <div className="rounded-3xl border border-border bg-gradient-to-br from-violet-600/20 via-card/70 to-blue-600/20 p-5 backdrop-blur">
+      <div className="rounded-3xl border border-border bg-gradient-to-br from-lime-500/10 via-card/70 to-emerald-500/10 p-5 backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <motion.span
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="relative grid size-16 place-items-center rounded-2xl bg-gradient-to-br from-violet-500 to-blue-500 text-3xl shadow-lg shadow-violet-500/30"
+              className="relative grid size-16 place-items-center rounded-2xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-3xl shadow-lg shadow-lime-400/30"
             >
               {p.avatar}
               <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-gold px-2 py-0.5 text-[10px] font-extrabold text-amber-950 shadow">
@@ -150,7 +150,7 @@ export default function Dashboard() {
             <div>
               <p className="text-sm text-muted">{greeting()},</p>
               <h1 className="font-display text-2xl font-extrabold leading-tight">{p.username}</h1>
-              <p className="text-xs font-semibold text-violet-300">{titleText}</p>
+              <p className="text-xs font-semibold text-lime-300">{titleText}</p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
                 <Badge variant="muted" className="capitalize">{p.fitnessLevel}</Badge>
                 <Badge variant="gold"><Flame className="size-3" /> {state.streak.current} day streak</Badge>
@@ -253,7 +253,7 @@ export default function Dashboard() {
         {tab === "settings" && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <SectionTitle icon={<Settings className="size-5 text-violet-300" />}>Settings</SectionTitle>
+              <SectionTitle icon={<Settings className="size-5 text-lime-300" />}>Settings</SectionTitle>
               <SettingsPanel />
             </div>
             <SupportFoundation variant="card" />
@@ -279,7 +279,7 @@ export default function Dashboard() {
         {tab === "coach" && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <SectionTitle icon={<MessageCircle className="size-5 text-violet-300" />}>AI Coach</SectionTitle>
+              <SectionTitle icon={<MessageCircle className="size-5 text-lime-300" />}>AI Coach</SectionTitle>
               <Coach state={state} />
             </div>
             <BossBattle boss={state.boss} />
