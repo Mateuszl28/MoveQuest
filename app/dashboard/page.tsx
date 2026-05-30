@@ -31,6 +31,8 @@ import { HeroCard } from "@/components/game/hero-card";
 import { ComboMeter } from "@/components/game/combo-meter";
 import { CompanionCard } from "@/components/game/companion-card";
 import { WeeklyChallenge } from "@/components/game/weekly-challenge";
+import { DailyEvent } from "@/components/game/daily-event";
+import { ActivityHeatmap } from "@/components/game/activity-heatmap";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
 import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
@@ -218,6 +220,7 @@ export default function Dashboard() {
         {tab === "overview" && (
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="space-y-5 lg:col-span-2">
+              <DailyEvent />
               {QuestsBlock}
               <XpChart xpHistory={state.xpHistory} />
               <div>
@@ -264,6 +267,7 @@ export default function Dashboard() {
                 <CharacterCard stats={state.stats} />
               </div>
               <XpChart xpHistory={state.xpHistory} />
+              <ActivityHeatmap xpHistory={state.xpHistory} />
             </div>
             <div className="space-y-5">
               <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />

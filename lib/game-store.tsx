@@ -25,6 +25,12 @@ import { dateKey, daysBetween, levelFromXp } from "./utils";
 import { COINS_BY_DIFFICULTY, DAILY_REWARD, shopItemById } from "./shop";
 import { classXpMultiplier, heroClassDef } from "./classes";
 import { COMBO_WINDOW_MS, comboMultiplier } from "./combo";
+import {
+  eventCoinMultiplier,
+  eventDamageMultiplier,
+  eventXpMultiplier,
+  generateDailyEvent,
+} from "./events";
 
 const STREAK_FREEZE_COST = 200;
 const REROLL_COST = 15;
@@ -309,15 +315,19 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // combo: consecutive completions within the window stack a multiplier
       const now = Date.now();
       const comboCount = now - prev.comboLastTs <= COMBO_WINDOW_MS ? prev.comboCount + 1 : 1;
+      const event = generateDailyEvent();
 
-      // XP + per-day history (hero class + combo boost the reward)
-      const mult = classXpMultiplier(prev.profile?.heroClass, quest.category) * comboMultiplier(comboCount);
+      // XP + per-day history (hero class + combo + daily event boost the reward)
+      const mult =
+        classXpMultiplier(prev.profile?.heroClass, quest.category) *
+        comboMultiplier(comboCount) *
+        eventXpMultiplier(event, quest.category);
       const reward = Math.round(quest.xpReward * mult);
       const totalXp = prev.totalXp + reward;
       const xpHistory = { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + reward };
 
-      // coins reward
-      let coins = prev.coins + COINS_BY_DIFFICULTY[quest.difficulty];
+      // coins reward (daily event can boost)
+      let coins = prev.coins + Math.round(COINS_BY_DIFFICULTY[quest.difficulty] * eventCoinMultiplier(event));
 
       // stat gains by category
       const stats = { ...prev.stats };
@@ -351,7 +361,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       let bossBonus = 0;
       let bossesDefeated = counters.bossesDefeated;
       if (boss && !boss.defeated) {
-        const hp = Math.max(0, boss.hp - quest.damage);
+        const dmg = Math.round(quest.damage * eventDamageMultiplier(event));
+        const hp = Math.max(0, boss.hp - dmg);
         const defeated = hp === 0;
         boss = { ...boss, hp, defeated };
         if (defeated) {
