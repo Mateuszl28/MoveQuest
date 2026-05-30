@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FAQ } from "@/components/landing/faq";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
+import { useT } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/language-toggle";
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
@@ -59,6 +61,7 @@ const TESTIMONIALS = [
 ];
 
 export default function Landing() {
+  const { t } = useT();
   return (
     <main className="flex-1">
       {/* NAV */}
@@ -71,15 +74,18 @@ export default function Landing() {
             Move<span className="text-gradient">Quest</span>
           </Link>
           <div className="hidden items-center gap-7 text-sm text-muted md:flex">
-            <a href="#how" className="hover:text-foreground">How it works</a>
-            <a href="#features" className="hover:text-foreground">Features</a>
-            <a href="#bosses" className="hover:text-foreground">Bosses</a>
-            <a href="#support" className="hover:text-foreground">Support</a>
-            <a href="#faq" className="hover:text-foreground">FAQ</a>
+            <a href="#how" className="hover:text-foreground">{t("nav.how", "How it works")}</a>
+            <a href="#features" className="hover:text-foreground">{t("nav.features", "Features")}</a>
+            <a href="#bosses" className="hover:text-foreground">{t("nav.bosses", "Bosses")}</a>
+            <a href="#support" className="hover:text-foreground">{t("nav.support", "Support")}</a>
+            <a href="#faq" className="hover:text-foreground">{t("nav.faq", "FAQ")}</a>
           </div>
-          <Link href="/login">
-            <Button size="sm">Start Your Quest</Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <Link href="/login">
+              <Button size="sm">{t("cta.start", "Start Your Quest")}</Button>
+            </Link>
+          </div>
         </nav>
       </header>
 
@@ -87,31 +93,30 @@ export default function Landing() {
       <section className="relative mx-auto max-w-6xl px-4 pt-16 pb-20 text-center md:pt-24">
         <Reveal>
           <Badge variant="gold" className="mx-auto mb-6 px-3 py-1 text-sm">
-            <Sparkles className="size-3.5" /> Duolingo for physical activity
+            <Sparkles className="size-3.5" /> {t("hero.badge", "Duolingo for physical activity")}
           </Badge>
         </Reveal>
         <Reveal delay={0.05}>
           <h1 className="mx-auto max-w-4xl font-display text-4xl font-extrabold leading-[1.05] tracking-tight md:text-6xl">
-            Turn Real-Life Movement Into{" "}
-            <span className="text-gradient">Epic Adventures</span>
+            {t("hero.title.a", "Turn Real-Life Movement Into")}{" "}
+            <span className="text-gradient">{t("hero.title.b", "Epic Adventures")}</span>
           </h1>
         </Reveal>
         <Reveal delay={0.1}>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            Complete quests, earn XP, defeat bosses, and level up your real life. The RPG that
-            rewards you every time you move.
+            {t("hero.sub", "Complete quests, earn XP, defeat bosses, and level up your real life. The RPG that rewards you every time you move.")}
           </p>
         </Reveal>
         <Reveal delay={0.15}>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link href="/login">
               <Button size="lg" className="group">
-                Start Your Quest
+                {t("cta.start", "Start Your Quest")}
                 <ArrowRight className="transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
             <a href="#how">
-              <Button size="lg" variant="outline">See how it works</Button>
+              <Button size="lg" variant="outline">{t("hero.how", "See how it works")}</Button>
             </a>
           </div>
         </Reveal>
@@ -175,8 +180,8 @@ export default function Landing() {
       {/* HOW IT WORKS */}
       <section id="how" className="mx-auto max-w-6xl px-4 py-20">
         <Reveal>
-          <h2 className="text-center font-display text-3xl font-extrabold md:text-4xl">How it works</h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-muted">Three simple steps between you and your next level.</p>
+          <h2 className="text-center font-display text-3xl font-extrabold md:text-4xl">{t("how.title", "How it works")}</h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-muted">{t("how.sub", "Three simple steps between you and your next level.")}</p>
         </Reveal>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {STEPS.map((s, i) => (
@@ -186,8 +191,8 @@ export default function Landing() {
                 <div className="mb-4 grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-lime-400/20 to-lime-500/20 ring-1 ring-inset ring-white/10">
                   <s.icon className="size-6 text-lime-300" />
                 </div>
-                <h3 className="font-display text-xl font-bold">{s.title}</h3>
-                <p className="mt-2 text-muted">{s.desc}</p>
+                <h3 className="font-display text-xl font-bold">{t(`how.s${s.n}.t`, s.title)}</h3>
+                <p className="mt-2 text-muted">{t(`how.s${s.n}.d`, s.desc)}</p>
               </div>
             </Reveal>
           ))}
@@ -198,9 +203,9 @@ export default function Landing() {
       <section id="features" className="mx-auto max-w-6xl px-4 py-20">
         <Reveal>
           <h2 className="text-center font-display text-3xl font-extrabold md:text-4xl">
-            A full <span className="text-gradient">RPG progression</span> system
+            {t("feat.title.a", "A full")} <span className="text-gradient">{t("feat.title.b", "RPG progression system")}</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-muted">Everything you love about games, applied to moving your body.</p>
+          <p className="mx-auto mt-3 max-w-xl text-center text-muted">{t("feat.sub", "Everything you love about games, applied to moving your body.")}</p>
         </Reveal>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f, i) => (
@@ -221,9 +226,9 @@ export default function Landing() {
       <section className="mx-auto max-w-6xl px-4 py-20">
         <Reveal>
           <h2 className="text-center font-display text-3xl font-extrabold md:text-4xl">
-            Collect <span className="text-gold-gradient">legendary</span> achievements
+            {t("ach.title.a", "Collect")} <span className="text-gold-gradient">{t("ach.title.b", "legendary")}</span> {t("ach.title.c", "achievements")}
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-center text-muted">Badges for every milestone — from your first quest to 5,000 XP.</p>
+          <p className="mx-auto mt-3 max-w-xl text-center text-muted">{t("ach.sub", "Badges for every milestone — from your first quest to 5,000 XP.")}</p>
         </Reveal>
         <div className="mt-12 grid grid-cols-2 gap-5 md:grid-cols-4">
           {ACHIEVEMENTS.map((a, i) => (
@@ -245,10 +250,10 @@ export default function Landing() {
         <div className="overflow-hidden rounded-3xl border border-rose-400/20 bg-gradient-to-br from-rose-500/10 via-card/60 to-lime-400/10 p-8 backdrop-blur md:p-12">
           <Reveal>
             <div className="text-center">
-              <Badge variant="hard" className="mx-auto mb-4"><Swords className="size-3.5" /> Daily Boss Battle</Badge>
-              <h2 className="font-display text-3xl font-extrabold md:text-4xl">Every quest is a weapon</h2>
+              <Badge variant="hard" className="mx-auto mb-4"><Swords className="size-3.5" /> {t("bosses.badge", "Daily Boss Battle")}</Badge>
+              <h2 className="font-display text-3xl font-extrabold md:text-4xl">{t("bosses.title", "Every quest is a weapon")}</h2>
               <p className="mx-auto mt-3 max-w-xl text-muted">
-                A new boss spawns each day. Complete quests to deal damage — defeat it before midnight for a massive XP bonus.
+                {t("bosses.sub", "A new boss spawns each day. Complete quests to deal damage — defeat it before midnight for a massive XP bonus.")}
               </p>
             </div>
           </Reveal>
@@ -275,7 +280,7 @@ export default function Landing() {
       {/* TESTIMONIALS */}
       <section className="mx-auto max-w-6xl px-4 py-20">
         <Reveal>
-          <h2 className="text-center font-display text-3xl font-extrabold md:text-4xl">Adventurers love the grind</h2>
+          <h2 className="text-center font-display text-3xl font-extrabold md:text-4xl">{t("testi.title", "Adventurers love the grind")}</h2>
         </Reveal>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
@@ -302,7 +307,7 @@ export default function Landing() {
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-6xl px-4 py-20">
         <Reveal>
-          <h2 className="mb-12 text-center font-display text-3xl font-extrabold md:text-4xl">Frequently asked questions</h2>
+          <h2 className="mb-12 text-center font-display text-3xl font-extrabold md:text-4xl">{t("faq.title", "Frequently asked questions")}</h2>
         </Reveal>
         <FAQ />
       </section>
@@ -312,13 +317,13 @@ export default function Landing() {
         <div className="relative overflow-hidden rounded-3xl border border-lime-400/30 bg-gradient-to-br from-lime-500/15 via-emerald-500/10 to-lime-400/15 p-10 text-center md:p-16">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(40rem_20rem_at_50%_-20%,rgba(255,255,255,0.15),transparent)]" />
           <Reveal>
-            <h2 className="font-display text-3xl font-extrabold md:text-5xl">Your quest begins today</h2>
+            <h2 className="font-display text-3xl font-extrabold md:text-5xl">{t("final.title", "Your quest begins today")}</h2>
             <p className="mx-auto mt-4 max-w-lg text-lg text-foreground/80">
-              Join the adventure. Level up your real life — one quest at a time.
+              {t("final.sub", "Join the adventure. Level up your real life — one quest at a time.")}
             </p>
             <Link href="/login" className="mt-8 inline-block">
               <Button size="lg" variant="gold" className="group">
-                Start Your Quest
+                {t("cta.start", "Start Your Quest")}
                 <ArrowRight className="transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
@@ -332,7 +337,7 @@ export default function Landing() {
           <div className="flex items-center gap-2 font-display font-bold text-foreground">
             <Swords className="size-4 text-lime-400" /> MoveQuest
           </div>
-          <p>Built for movement. © 2026 MoveQuest.</p>
+          <p>{t("footer.tag", "Built for movement.")} © 2026 MoveQuest.</p>
         </div>
       </footer>
     </main>

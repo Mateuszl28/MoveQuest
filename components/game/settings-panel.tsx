@@ -6,6 +6,8 @@ import { useGame } from "@/lib/game-store";
 import type { Difficulty, FitnessLevel } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { shopItemById } from "@/lib/shop";
+import { useT } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/language-toggle";
 
 const BASE_AVATARS = ["🦸", "🥷", "🧝", "🧙", "🦊", "🐺", "🐻", "🦉", "🐲", "🦁", "🐯", "🦅"];
 const LEVELS: FitnessLevel[] = ["beginner", "intermediate", "advanced"];
@@ -13,6 +15,7 @@ const DIFFS: Difficulty[] = ["easy", "medium", "hard"];
 
 export function SettingsPanel() {
   const { state, updateProfile, resetProgress, toggleSound, setNotifications } = useGame();
+  const { t } = useT();
   const p = state.profile;
   const [confirmReset, setConfirmReset] = useState(false);
   if (!p) return null;
@@ -43,6 +46,14 @@ export function SettingsPanel() {
 
   return (
     <div className="space-y-5">
+      <div className="flex items-center justify-between rounded-2xl border border-border bg-card/60 p-5">
+        <div>
+          <h3 className="font-display font-bold">{t("lang.label", "Language")}</h3>
+          <p className="text-xs text-muted">English / Polski</p>
+        </div>
+        <LanguageToggle />
+      </div>
+
       <div className="rounded-2xl border border-border bg-card/60 p-5">
         <h3 className="mb-4 font-display font-bold">Avatar</h3>
         <div className="grid grid-cols-6 gap-2 sm:grid-cols-12">

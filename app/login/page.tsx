@@ -10,6 +10,8 @@ import type { Difficulty, FitnessLevel, HeroClass } from "@/lib/types";
 import { HERO_CLASSES } from "@/lib/classes";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+import { useT } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/language-toggle";
 
 const STEPS = 4;
 
@@ -30,6 +32,7 @@ const DIFFS: { value: Difficulty; label: string; desc: string }[] = [
 export default function Onboarding() {
   const router = useRouter();
   const { state, ready, createProfile } = useGame();
+  const { t } = useT();
   const [step, setStep] = useState(0);
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState(AVATARS[0]);
@@ -72,7 +75,10 @@ export default function Onboarding() {
           </span>
           Move<span className="text-gradient">Quest</span>
         </Link>
-        <span className="text-sm text-muted">Step {step + 1} / {STEPS}</span>
+        <div className="flex items-center gap-3">
+          <LanguageToggle />
+          <span className="text-sm text-muted">{t("ob.step", "Step")} {step + 1} / {STEPS}</span>
+        </div>
       </header>
 
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-10">
@@ -95,8 +101,8 @@ export default function Onboarding() {
         >
           {step === 0 && (
             <div>
-              <h1 className="font-display text-3xl font-extrabold">Create your hero</h1>
-              <p className="mt-2 text-muted">Pick a name and an avatar for your adventure.</p>
+              <h1 className="font-display text-3xl font-extrabold">{t("ob.hero.title", "Create your hero")}</h1>
+              <p className="mt-2 text-muted">{t("ob.hero.sub", "Pick a name and an avatar for your adventure.")}</p>
 
               <div className="mt-7 space-y-2">
                 <Label htmlFor="username">Username</Label>
@@ -134,8 +140,8 @@ export default function Onboarding() {
 
           {step === 1 && (
             <div>
-              <h1 className="font-display text-3xl font-extrabold">Pick your class</h1>
-              <p className="mt-2 text-muted">It shapes your daily quests and grants a passive perk.</p>
+              <h1 className="font-display text-3xl font-extrabold">{t("ob.class.title", "Pick your class")}</h1>
+              <p className="mt-2 text-muted">{t("ob.class.sub", "It shapes your daily quests and grants a passive perk.")}</p>
 
               <div className="mt-7 grid grid-cols-2 gap-2.5">
                 {HERO_CLASSES.map((c) => (
@@ -160,8 +166,8 @@ export default function Onboarding() {
 
           {step === 2 && (
             <div>
-              <h1 className="font-display text-3xl font-extrabold">A bit about you</h1>
-              <p className="mt-2 text-muted">We tune quest difficulty to your level.</p>
+              <h1 className="font-display text-3xl font-extrabold">{t("ob.about.title", "A bit about you")}</h1>
+              <p className="mt-2 text-muted">{t("ob.about.sub", "We tune quest difficulty to your level.")}</p>
 
               <div className="mt-7 space-y-2">
                 <Label htmlFor="age">Age</Label>
@@ -203,8 +209,8 @@ export default function Onboarding() {
 
           {step === 3 && (
             <div>
-              <h1 className="font-display text-3xl font-extrabold">Choose your pace</h1>
-              <p className="mt-2 text-muted">How hard should your daily quests hit?</p>
+              <h1 className="font-display text-3xl font-extrabold">{t("ob.pace.title", "Choose your pace")}</h1>
+              <p className="mt-2 text-muted">{t("ob.pace.sub", "How hard should your daily quests hit?")}</p>
 
               <div className="mt-7 space-y-2">
                 {DIFFS.map((d) => (
@@ -249,7 +255,7 @@ export default function Onboarding() {
             </Button>
           )}
           <Button size="lg" className="flex-1 group" disabled={!canContinue} onClick={next}>
-            {step === 2 ? "Start Your Quest" : "Continue"}
+            {step === STEPS - 1 ? t("ob.start", "Start Your Quest") : t("ob.continue", "Continue")}
             <ArrowRight className="transition-transform group-hover:translate-x-1" />
           </Button>
         </div>

@@ -2,6 +2,7 @@ export type Difficulty = "easy" | "medium" | "hard";
 export type FitnessLevel = "beginner" | "intermediate" | "advanced";
 export type StatKey = "strength" | "endurance" | "agility" | "consistency";
 export type HeroClass = "warrior" | "runner" | "yogi" | "allrounder";
+export type Lang = "en" | "pl";
 
 export interface Quest {
   id: string;
@@ -125,6 +126,8 @@ export interface GameState {
   raidWeek: string | null;
   /** date key of the last "perfect day" (all quests cleared) */
   lastPerfectDate: string | null;
+  /** UI language */
+  lang: Lang;
 }
 
 export interface Raid {

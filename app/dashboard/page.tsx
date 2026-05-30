@@ -41,6 +41,7 @@ import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
 import { heroClassDef } from "@/lib/classes";
 import { companionEmoji } from "@/lib/companions";
+import { useT } from "@/lib/i18n";
 
 function greeting() {
   const h = new Date().getHours();
@@ -80,6 +81,7 @@ export default function Dashboard() {
     setCompanion, claimWeekly, addCustomQuest, removeCustomQuest, spinWheel,
   } = useGame();
   const [tab, setTab] = useState("overview");
+  const { t } = useT();
 
   useEffect(() => {
     if (ready && !state.profile) router.replace("/login");
@@ -94,7 +96,7 @@ export default function Dashboard() {
     return (
       <div className="grid flex-1 place-items-center">
         <div className="flex items-center gap-3 text-muted">
-          <Sparkles className="size-5 animate-pulse text-lime-400" /> Loading your quest…
+          <Sparkles className="size-5 animate-pulse text-lime-400" /> {t("loading", "Loading your quest…")}
         </div>
       </div>
     );
@@ -107,6 +109,8 @@ export default function Dashboard() {
   const playerLb = { username: p.username, avatar: p.avatar, xp: state.totalXp, streak: state.streak.current };
   const rank = rankForLevel(level);
   const cls = heroClassDef(p.heroClass);
+  const gh = new Date().getHours();
+  const greetKey = gh < 12 ? "greet.morning" : gh < 18 ? "greet.afternoon" : "greet.evening";
   const equippedTitle = state.equippedTitle ? shopItemById(state.equippedTitle)?.value : null;
   const titleText = equippedTitle ?? `${rank.emoji} ${rank.name}`;
   const heroFields = {
@@ -126,15 +130,15 @@ export default function Dashboard() {
         icon={<Swords className="size-5 text-lime-300" />}
         action={
           <Button variant="ghost" size="sm" onClick={regenerateQuests}>
-            <RefreshCw className="size-3.5" /> New set
+            <RefreshCw className="size-3.5" /> {t("quests.newset", "New set")}
           </Button>
         }
       >
-        Daily Quests
+        {t("quests.title", "Daily Quests")}
       </SectionTitle>
       <div className="mb-3 flex items-center justify-between text-sm">
-        <span className="text-muted">{completed.length}/{state.quests.length} completed</span>
-        <span className="font-semibold text-gold">+{todayXp} XP today</span>
+        <span className="text-muted">{completed.length}/{state.quests.length} {t("quests.completed", "completed")}</span>
+        <span className="font-semibold text-gold">+{todayXp} {t("quests.xptoday", "XP today")}</span>
       </div>
       <div className="mb-3">
         <ComboMeter count={state.comboCount} lastTs={state.comboLastTs} />
@@ -153,7 +157,7 @@ export default function Dashboard() {
           animate={{ opacity: 1 }}
           className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm text-emerald-300"
         >
-          🎉 All quests cleared! Come back tomorrow or generate a fresh set.
+          {t("quests.allcleared", "🎉 All quests cleared! Come back tomorrow or generate a fresh set.")}
         </motion.p>
       )}
     </div>
@@ -179,7 +183,7 @@ export default function Dashboard() {
               </span>
             </motion.span>
             <div>
-              <p className="text-sm text-muted">{greeting()},</p>
+              <p className="text-sm text-muted">{t(greetKey, greeting())},</p>
               <h1 className="font-display text-2xl font-extrabold leading-tight">{p.username}</h1>
               <p className="text-xs font-semibold text-lime-300">{titleText}</p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -194,7 +198,7 @@ export default function Dashboard() {
               <Coins className="size-4" /> {state.coins.toLocaleString()}
             </span>
             <Button variant="outline" size="sm" onClick={() => { logout(); router.replace("/"); }}>
-              <LogOut className="size-3.5" /> Log out
+              <LogOut className="size-3.5" /> {t("common.logout", "Log out")}
             </Button>
           </div>
         </div>
@@ -215,7 +219,7 @@ export default function Dashboard() {
 
       {/* TABS */}
       <div className="sticky top-2 z-30 mt-4">
-        <Tabs tabs={TABS} value={tab} onChange={setTab} />
+        <Tabs tabs={TABS.map((tb) => ({ ...tb, label: t(`tab.${tb.value}`, tb.label) }))} value={tab} onChange={setTab} />
       </div>
 
       {/* CONTENT */}

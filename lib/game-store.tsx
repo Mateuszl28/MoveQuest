@@ -78,6 +78,7 @@ function freshState(): GameState {
     raid: null,
     raidWeek: null,
     lastPerfectDate: null,
+    lang: "en",
   };
 }
 
@@ -85,18 +86,23 @@ function load(): GameState {
   if (typeof window === "undefined") return freshState();
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return freshState();
+    const newUserLang =
+      typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("pl") ? "pl" : "en";
+    if (!raw) return { ...freshState(), lang: newUserLang };
     const parsed = JSON.parse(raw) as GameState;
     // merge achievements in case new ones were added
     const base = freshState();
     const byId = new Map(parsed.achievements?.map((a) => [a.id, a]));
     parsed.achievements = base.achievements.map((a) => byId.get(a.id) ?? a);
     // deep-merge nested objects so new fields (added in later versions) get defaults
+    const detected =
+      typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("pl") ? "pl" : "en";
     return {
       ...base,
       ...parsed,
       counters: { ...base.counters, ...(parsed.counters ?? {}) },
       steps: parsed.steps ?? {},
+      lang: parsed.lang ?? detected,
     };
   } catch {
     return freshState();
@@ -202,6 +208,8 @@ interface GameContextValue {
   removeCustomQuest: (id: string) => void;
   /** apply the fortune-wheel prize (once per day) */
   spinWheel: (prize: { coins?: number; xp?: number; freeze?: number }) => void;
+  /** set the UI language */
+  setLang: (lang: GameState["lang"]) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -493,6 +501,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const setNotifications = (on: boolean) =>
     setState((prev) => ({ ...prev, notificationsEnabled: on }));
 
+  const setLang = (lang: GameState["lang"]) => setState((prev) => ({ ...prev, lang }));
+
   const addSteps = (n: number) =>
     setState((prev) => {
       const today = dateKey();
@@ -617,6 +627,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     addCustomQuest,
     removeCustomQuest,
     spinWheel,
+    setLang,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
