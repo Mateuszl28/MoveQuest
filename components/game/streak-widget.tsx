@@ -1,14 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flame } from "lucide-react";
+import { Flame, Snowflake } from "lucide-react";
 import type { StreakState } from "@/lib/types";
 import { dateKey } from "@/lib/utils";
 
 const MILESTONES = [3, 7, 14, 30];
 const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
 
-export function StreakWidget({ streak }: { streak: StreakState }) {
+export function StreakWidget({
+  streak,
+  freezes = 0,
+  coins = 0,
+  freezeCost,
+  onBuyFreeze,
+}: {
+  streak: StreakState;
+  freezes?: number;
+  coins?: number;
+  freezeCost?: number;
+  onBuyFreeze?: () => void;
+}) {
   // last 7 days (Mon-anchored visual): build from today backwards
   const today = new Date();
   const last7: { key: string; active: boolean }[] = [];
@@ -72,6 +84,27 @@ export function StreakWidget({ streak }: { streak: StreakState }) {
           />
         </div>
       </div>
+
+      {/* streak freeze */}
+      {onBuyFreeze && (
+        <div className="mt-4 flex items-center justify-between gap-2 rounded-xl border border-sky-400/25 bg-sky-400/5 p-2.5">
+          <div className="flex items-center gap-2 text-sm">
+            <Snowflake className="size-4 text-sky-300" />
+            <span>
+              Streak Freeze
+              <span className="ml-1.5 rounded-md bg-white/10 px-1.5 py-0.5 text-xs font-semibold">×{freezes}</span>
+            </span>
+          </div>
+          <button
+            onClick={onBuyFreeze}
+            disabled={freezeCost === undefined || coins < freezeCost || freezes >= 3}
+            title="Auto-saves your streak if you miss a day (max 3)"
+            className="rounded-lg bg-sky-400/20 px-2.5 py-1 text-xs font-semibold text-sky-200 transition hover:bg-sky-400/30 disabled:opacity-40 active:scale-95"
+          >
+            Buy · {freezeCost}🪙
+          </button>
+        </div>
+      )}
     </div>
   );
 }

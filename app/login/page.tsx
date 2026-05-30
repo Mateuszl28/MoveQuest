@@ -6,9 +6,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Swords, Check } from "lucide-react";
 import { useGame } from "@/lib/game-store";
-import type { Difficulty, FitnessLevel } from "@/lib/types";
+import type { Difficulty, FitnessLevel, HeroClass } from "@/lib/types";
+import { HERO_CLASSES } from "@/lib/classes";
 import { Button } from "@/components/ui/button";
 import { Input, Label } from "@/components/ui/input";
+
+const STEPS = 4;
 
 const AVATARS = ["🦸", "🥷", "🧝", "🧙", "🦊", "🐺", "🐻", "🦉", "🐲", "🦁", "🐯", "🦅"];
 
@@ -33,6 +36,7 @@ export default function Onboarding() {
   const [age, setAge] = useState("");
   const [fitnessLevel, setFitnessLevel] = useState<FitnessLevel>("beginner");
   const [difficultyPreference, setDifficultyPreference] = useState<Difficulty>("medium");
+  const [heroClass, setHeroClass] = useState<HeroClass>("allrounder");
 
   // already onboarded → go to dashboard
   useEffect(() => {
@@ -41,8 +45,9 @@ export default function Onboarding() {
 
   const canContinue =
     (step === 0 && username.trim().length >= 2) ||
-    (step === 1 && Number(age) >= 5 && Number(age) <= 120) ||
-    step === 2;
+    step === 1 ||
+    (step === 2 && Number(age) >= 5 && Number(age) <= 120) ||
+    step === 3;
 
   const finish = () => {
     createProfile({
@@ -51,11 +56,12 @@ export default function Onboarding() {
       age: Number(age) || 18,
       fitnessLevel,
       difficultyPreference,
+      heroClass,
     });
     router.push("/dashboard");
   };
 
-  const next = () => (step < 2 ? setStep((s) => s + 1) : finish());
+  const next = () => (step < STEPS - 1 ? setStep((s) => s + 1) : finish());
 
   return (
     <main className="flex min-h-dvh flex-1 flex-col">
@@ -66,13 +72,13 @@ export default function Onboarding() {
           </span>
           Move<span className="text-gradient">Quest</span>
         </Link>
-        <span className="text-sm text-muted">Step {step + 1} / 3</span>
+        <span className="text-sm text-muted">Step {step + 1} / {STEPS}</span>
       </header>
 
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 pb-10">
         {/* progress dots */}
         <div className="mb-8 flex gap-2">
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
               className={`h-1.5 flex-1 rounded-full transition-colors ${i <= step ? "bg-lime-400/15 ring-1 ring-inset ring-lime-400/30" : "bg-white/10"}`}
@@ -128,6 +134,32 @@ export default function Onboarding() {
 
           {step === 1 && (
             <div>
+              <h1 className="font-display text-3xl font-extrabold">Pick your class</h1>
+              <p className="mt-2 text-muted">It shapes your daily quests and grants a passive perk.</p>
+
+              <div className="mt-7 grid grid-cols-2 gap-2.5">
+                {HERO_CLASSES.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setHeroClass(c.id)}
+                    className={`rounded-2xl border p-4 text-left transition-all ${
+                      heroClass === c.id
+                        ? "border-lime-400 bg-lime-400/15"
+                        : "border-border bg-white/5 hover:bg-white/10"
+                    }`}
+                  >
+                    <span className="text-3xl">{c.emoji}</span>
+                    <p className="mt-2 font-display font-bold">{c.name}</p>
+                    <p className="text-[11px] text-muted">{c.blurb}</p>
+                    <p className={`mt-2 text-[11px] font-semibold ${c.accent}`}>{c.passive}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div>
               <h1 className="font-display text-3xl font-extrabold">A bit about you</h1>
               <p className="mt-2 text-muted">We tune quest difficulty to your level.</p>
 
@@ -169,7 +201,7 @@ export default function Onboarding() {
             </div>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <div>
               <h1 className="font-display text-3xl font-extrabold">Choose your pace</h1>
               <p className="mt-2 text-muted">How hard should your daily quests hit?</p>
@@ -200,7 +232,9 @@ export default function Onboarding() {
                   <span className="grid size-12 place-items-center rounded-xl bg-lime-400/15 ring-1 ring-inset ring-lime-400/30 text-2xl">{avatar}</span>
                   <div>
                     <p className="font-display font-bold">{username || "Adventurer"}</p>
-                    <p className="text-xs text-muted capitalize">{fitnessLevel} · {difficultyPreference} pace</p>
+                    <p className="text-xs text-muted capitalize">
+                      {HERO_CLASSES.find((c) => c.id === heroClass)?.name} · {fitnessLevel} · {difficultyPreference} pace
+                    </p>
                   </div>
                 </div>
               </div>

@@ -82,6 +82,8 @@ export function generateDailyQuests(opts: {
   level: FitnessLevel;
   preference: Difficulty;
   streak: number;
+  /** the hero class's favoured category — gets an extra quest */
+  favored?: Quest["category"] | null;
   date?: Date;
 }): Quest[] {
   const day = dateKey(opts.date);
@@ -104,6 +106,12 @@ export function generateDailyQuests(opts: {
 
   // streak bonus quest every 3 days of streak
   if (opts.streak >= 3) mix.push(hard[hard.length > 2 ? 2 : 0]);
+
+  // class-favoured bonus quest
+  if (opts.favored) {
+    const favPool = shuffle(pool.filter((p) => p.category === opts.favored), rnd);
+    if (favPool[0]) mix.push(favPool[0]);
+  }
 
   // ensure a variety of categories: dedupe by title
   const seen = new Set<string>();

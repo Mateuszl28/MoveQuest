@@ -1,6 +1,7 @@
 export type Difficulty = "easy" | "medium" | "hard";
 export type FitnessLevel = "beginner" | "intermediate" | "advanced";
 export type StatKey = "strength" | "endurance" | "agility" | "consistency";
+export type HeroClass = "warrior" | "runner" | "yogi" | "allrounder";
 
 export interface Quest {
   id: string;
@@ -55,6 +56,7 @@ export interface Profile {
   age: number;
   fitnessLevel: FitnessLevel;
   difficultyPreference: Difficulty;
+  heroClass: HeroClass;
 }
 
 export interface StreakState {
@@ -99,4 +101,6 @@ export interface GameState {
   lastRewardDate: string | null;
   /** sound effects on/off */
   soundEnabled: boolean;
+  /** streak-freeze consumables that auto-save a broken streak */
+  streakFreezes: number;
 }

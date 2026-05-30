@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Pause, Play, Swords, Timer, X } from "lucide-react";
+import { Check, Dices, Pause, Play, Swords, Timer, X } from "lucide-react";
 import type { Quest } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { useGame } from "@/lib/game-store";
@@ -25,12 +25,17 @@ function fmt(s: number) {
 export function QuestCard({
   quest,
   onComplete,
+  onReroll,
+  rerollCost,
 }: {
   quest: Quest;
   onComplete: (id: string) => void;
+  onReroll?: (id: string) => void;
+  rerollCost?: number;
 }) {
   const { state } = useGame();
   const sound = state.soundEnabled;
+  const canReroll = rerollCost !== undefined && state.coins >= rerollCost;
   const [remaining, setRemaining] = useState<number | null>(null);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -118,6 +123,18 @@ export function QuestCard({
       </div>
 
       {/* actions */}
+      <div className="flex shrink-0 items-center gap-1.5">
+      {onReroll && !quest.completed && !timing && (
+        <button
+          onClick={() => onReroll(quest.id)}
+          disabled={!canReroll}
+          title={`Reroll quest (${rerollCost} coins)`}
+          aria-label="Reroll quest"
+          className="grid size-10 place-items-center rounded-xl border border-border bg-white/5 text-muted transition hover:text-lime-300 disabled:opacity-40 active:scale-90"
+        >
+          <Dices className="size-4" />
+        </button>
+      )}
       {quest.completed ? (
         <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-emerald-500/20 text-emerald-300">
           <Check className="size-5" />
@@ -155,6 +172,7 @@ export function QuestCard({
           <Check className="size-5" />
         </button>
       )}
+      </div>
     </motion.div>
   );
 }

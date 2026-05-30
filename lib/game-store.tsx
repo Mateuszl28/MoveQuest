@@ -23,6 +23,10 @@ import { generateDailyBoss } from "./bosses";
 import { evaluateAchievements, initialAchievements } from "./achievements";
 import { dateKey, daysBetween, levelFromXp } from "./utils";
 import { COINS_BY_DIFFICULTY, DAILY_REWARD, shopItemById } from "./shop";
+import { classXpMultiplier, heroClassDef } from "./classes";
+
+const STREAK_FREEZE_COST = 200;
+const REROLL_COST = 15;
 
 const STORAGE_KEY = "movequest:v1";
 
@@ -50,6 +54,7 @@ function freshState(): GameState {
     equippedTitle: null,
     lastRewardDate: null,
     soundEnabled: true,
+    streakFreezes: 0,
   };
 }
 
@@ -81,6 +86,8 @@ function withDailyRollover(state: GameState): GameState {
   const today = dateKey();
   let next = state;
 
+  const favored = heroClassDef(profile.heroClass).favored;
+
   if (next.questsDate !== today) {
     next = {
       ...next,
@@ -88,6 +95,7 @@ function withDailyRollover(state: GameState): GameState {
         level: profile.fitnessLevel,
         preference: profile.difficultyPreference,
         streak: next.streak.current,
+        favored,
       }),
       questsDate: today,
     };
@@ -98,10 +106,23 @@ function withDailyRollover(state: GameState): GameState {
     next = { ...next, boss: generateDailyBoss(level), bossDate: today };
   }
 
-  // streak: if last active day was before yesterday, the streak is broken
+  // streak: if a day was missed, a streak freeze can save it
   if (next.streak.lastActiveDate) {
     const gap = daysBetween(next.streak.lastActiveDate, today);
-    if (gap >= 2) next = { ...next, streak: { ...next.streak, current: 0 } };
+    if (gap >= 2) {
+      if (next.streakFreezes > 0 && next.streak.current > 0) {
+        // consume one freeze; keep the streak alive as if yesterday was active
+        const y = new Date();
+        y.setDate(y.getDate() - 1);
+        next = {
+          ...next,
+          streakFreezes: next.streakFreezes - 1,
+          streak: { ...next.streak, lastActiveDate: dateKey(y) },
+        };
+      } else {
+        next = { ...next, streak: { ...next.streak, current: 0 } };
+      }
+    }
   }
 
   return next;
@@ -131,6 +152,12 @@ interface GameContextValue {
   equipTitle: (id: string | null) => void;
   /** toggle sound effects */
   toggleSound: () => void;
+  /** reroll a single quest for coins */
+  rerollQuest: (id: string) => void;
+  /** buy a streak freeze (max 3) */
+  buyStreakFreeze: () => void;
+  rerollCost: number;
+  streakFreezeCost: number;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -178,7 +205,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const profile = { ...prev.profile, ...patch };
       // regenerate quests if the inputs that drive them changed
       const regen =
-        patch.fitnessLevel !== undefined || patch.difficultyPreference !== undefined;
+        patch.fitnessLevel !== undefined ||
+        patch.difficultyPreference !== undefined ||
+        patch.heroClass !== undefined;
       const next = { ...prev, profile };
       return regen
         ? {
@@ -187,6 +216,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
               level: profile.fitnessLevel,
               preference: profile.difficultyPreference,
               streak: next.streak.current,
+              favored: heroClassDef(profile.heroClass).favored,
             }),
             questsDate: dateKey(),
           }
@@ -210,10 +240,45 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         level: prev.profile.fitnessLevel,
         preference: prev.profile.difficultyPreference,
         streak: prev.streak.current,
+        favored: heroClassDef(prev.profile.heroClass).favored,
         date: new Date(),
       }).map((q, i) => ({ ...q, id: `${q.id}-${salt}-${i}` }));
       return { ...prev, quests, questsDate: dateKey() };
     });
+  };
+
+  const rerollQuest = (id: string) => {
+    setState((prev) => {
+      if (!prev.profile || prev.coins < REROLL_COST) return prev;
+      const target = prev.quests.find((q) => q.id === id);
+      if (!target || target.completed) return prev;
+      // build a pool of candidates and pick one not already shown
+      const salt = String(prev.coins + prev.quests.length);
+      const candidates = generateDailyQuests({
+        level: prev.profile.fitnessLevel,
+        preference: prev.profile.difficultyPreference,
+        streak: prev.streak.current,
+        favored: heroClassDef(prev.profile.heroClass).favored,
+        date: new Date(),
+      });
+      const titles = new Set(prev.quests.map((q) => q.title));
+      const fresh = candidates.find((c) => !titles.has(c.title));
+      if (!fresh) return prev;
+      const replacement = { ...fresh, id: `${fresh.id}-reroll-${salt}` };
+      return {
+        ...prev,
+        coins: prev.coins - REROLL_COST,
+        quests: prev.quests.map((q) => (q.id === id ? replacement : q)),
+      };
+    });
+  };
+
+  const buyStreakFreeze = () => {
+    setState((prev) =>
+      prev.coins < STREAK_FREEZE_COST || prev.streakFreezes >= 3
+        ? prev
+        : { ...prev, coins: prev.coins - STREAK_FREEZE_COST, streakFreezes: prev.streakFreezes + 1 },
+    );
   };
 
   const completeQuest = (id: string) => {
@@ -225,9 +290,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       // mark complete
       const quests = prev.quests.map((q) => (q.id === id ? { ...q, completed: true } : q));
 
-      // XP + per-day history
-      const totalXp = prev.totalXp + quest.xpReward;
-      const xpHistory = { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + quest.xpReward };
+      // XP + per-day history (hero class can boost the reward)
+      const mult = classXpMultiplier(prev.profile?.heroClass, quest.category);
+      const reward = Math.round(quest.xpReward * mult);
+      const totalXp = prev.totalXp + reward;
+      const xpHistory = { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + reward };
 
       // coins reward
       let coins = prev.coins + COINS_BY_DIFFICULTY[quest.difficulty];
@@ -384,6 +451,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     buyCosmetic,
     equipTitle,
     toggleSound,
+    rerollQuest,
+    buyStreakFreeze,
+    rerollCost: REROLL_COST,
+    streakFreezeCost: STREAK_FREEZE_COST,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

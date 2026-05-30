@@ -29,6 +29,7 @@ import { DailyReward } from "@/components/game/daily-reward";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
 import { rankForLevel } from "@/lib/ranks";
 import { shopItemById } from "@/lib/shop";
+import { heroClassDef } from "@/lib/classes";
 
 function greeting() {
   const h = new Date().getHours();
@@ -64,6 +65,7 @@ export default function Dashboard() {
   const {
     state, ready, level, completeQuest, regenerateQuests, logout,
     claimChallenge, claimDailyReward, buyCosmetic, equipTitle,
+    rerollQuest, rerollCost, buyStreakFreeze, streakFreezeCost,
   } = useGame();
   const [tab, setTab] = useState("overview");
 
@@ -92,6 +94,7 @@ export default function Dashboard() {
   const unlocked = state.achievements.filter((a) => a.unlocked).length;
   const playerLb = { username: p.username, avatar: p.avatar, xp: state.totalXp, streak: state.streak.current };
   const rank = rankForLevel(level);
+  const cls = heroClassDef(p.heroClass);
   const equippedTitle = state.equippedTitle ? shopItemById(state.equippedTitle)?.value : null;
   const titleText = equippedTitle ?? `${rank.emoji} ${rank.name}`;
 
@@ -113,7 +116,7 @@ export default function Dashboard() {
       </div>
       <div className="space-y-2.5">
         {remaining.map((q) => (
-          <QuestCard key={q.id} quest={q} onComplete={completeQuest} />
+          <QuestCard key={q.id} quest={q} onComplete={completeQuest} onReroll={rerollQuest} rerollCost={rerollCost} />
         ))}
         {completed.map((q) => (
           <QuestCard key={q.id} quest={q} onComplete={completeQuest} />
@@ -152,6 +155,7 @@ export default function Dashboard() {
               <h1 className="font-display text-2xl font-extrabold leading-tight">{p.username}</h1>
               <p className="text-xs font-semibold text-lime-300">{titleText}</p>
               <div className="mt-1.5 flex flex-wrap gap-1.5">
+                <Badge>{cls.emoji} {cls.name}</Badge>
                 <Badge variant="muted" className="capitalize">{p.fitnessLevel}</Badge>
                 <Badge variant="gold"><Flame className="size-3" /> {state.streak.current} day streak</Badge>
               </div>
@@ -205,7 +209,7 @@ export default function Dashboard() {
             <div className="space-y-5">
               <DailyReward lastRewardDate={state.lastRewardDate} onClaim={claimDailyReward} />
               <BossBattle boss={state.boss} />
-              <StreakWidget streak={state.streak} />
+              <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
               <FriendChallenges state={state} onClaim={claimChallenge} />
               <div className="rounded-2xl border border-border bg-card/60 p-5">
                 <SectionTitle icon={<Users className="size-5 text-emerald-300" />} action={
@@ -237,7 +241,7 @@ export default function Dashboard() {
               <XpChart xpHistory={state.xpHistory} />
             </div>
             <div className="space-y-5">
-              <StreakWidget streak={state.streak} />
+              <StreakWidget streak={state.streak} freezes={state.streakFreezes} coins={state.coins} freezeCost={streakFreezeCost} onBuyFreeze={buyStreakFreeze} />
               <StatsPanel state={state} />
             </div>
           </div>
