@@ -5,8 +5,9 @@ import { AlertTriangle, Check } from "lucide-react";
 import { useGame } from "@/lib/game-store";
 import type { Difficulty, FitnessLevel } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { shopItemById } from "@/lib/shop";
 
-const AVATARS = ["🦸", "🥷", "🧝", "🧙", "🦊", "🐺", "🐻", "🦉", "🐲", "🦁", "🐯", "🦅"];
+const BASE_AVATARS = ["🦸", "🥷", "🧝", "🧙", "🦊", "🐺", "🐻", "🦉", "🐲", "🦁", "🐯", "🦅"];
 const LEVELS: FitnessLevel[] = ["beginner", "intermediate", "advanced"];
 const DIFFS: Difficulty[] = ["easy", "medium", "hard"];
 
@@ -16,12 +17,18 @@ export function SettingsPanel() {
   const [confirmReset, setConfirmReset] = useState(false);
   if (!p) return null;
 
+  const ownedAvatars = state.ownedCosmetics
+    .map((id) => shopItemById(id))
+    .filter((i) => i && i.type === "avatar")
+    .map((i) => i!.value);
+  const avatars = [...BASE_AVATARS, ...ownedAvatars];
+
   return (
     <div className="space-y-5">
       <div className="rounded-2xl border border-border bg-card/60 p-5">
         <h3 className="mb-4 font-display font-bold">Avatar</h3>
         <div className="grid grid-cols-6 gap-2 sm:grid-cols-12">
-          {AVATARS.map((a) => (
+          {avatars.map((a) => (
             <button
               key={a}
               onClick={() => updateProfile({ avatar: a })}

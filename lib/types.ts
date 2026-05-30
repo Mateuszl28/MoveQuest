@@ -86,4 +86,12 @@ export interface GameState {
   xpHistory: Record<string, number>;
   /** ids of friend challenges already claimed (prevents double reward) */
   claimedChallenges: string[];
+  /** in-game currency earned from quests, bosses and daily rewards */
+  coins: number;
+  /** purchased cosmetic ids (titles + avatars) */
+  ownedCosmetics: string[];
+  /** equipped title cosmetic id, or null for the level-based rank */
+  equippedTitle: string | null;
+  /** date key of the last claimed daily reward */
+  lastRewardDate: string | null;
 }

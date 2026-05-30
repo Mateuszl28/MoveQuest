@@ -22,6 +22,7 @@ import { generateDailyQuests } from "./quests";
 import { generateDailyBoss } from "./bosses";
 import { evaluateAchievements, initialAchievements } from "./achievements";
 import { dateKey, daysBetween, levelFromXp } from "./utils";
+import { COINS_BY_DIFFICULTY, DAILY_REWARD, shopItemById } from "./shop";
 
 const STORAGE_KEY = "movequest:v1";
 
@@ -44,6 +45,10 @@ function freshState(): GameState {
     counters: { questsCompleted: 0, squats: 0, bossesDefeated: 0, minutesStretched: 0 },
     xpHistory: {},
     claimedChallenges: [],
+    coins: 0,
+    ownedCosmetics: [],
+    equippedTitle: null,
+    lastRewardDate: null,
   };
 }
 
@@ -112,6 +117,12 @@ interface GameContextValue {
   resetProgress: () => void;
   /** claim a friend challenge reward (idempotent per id) */
   claimChallenge: (id: string, rewardXp: number) => void;
+  /** claim the once-per-day reward chest */
+  claimDailyReward: () => void;
+  /** buy a shop cosmetic with coins */
+  buyCosmetic: (id: string) => void;
+  /** equip a title cosmetic (null = level rank) */
+  equipTitle: (id: string | null) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -210,6 +221,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const totalXp = prev.totalXp + quest.xpReward;
       const xpHistory = { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + quest.xpReward };
 
+      // coins reward
+      let coins = prev.coins + COINS_BY_DIFFICULTY[quest.difficulty];
+
       // stat gains by category
       const stats = { ...prev.stats };
       const gain = quest.difficulty === "hard" ? 3 : quest.difficulty === "medium" ? 2 : 1;
@@ -248,6 +262,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         if (defeated) {
           bossBonus = boss.bonusXp;
           bossesDefeated += 1;
+          coins += 40; // bonus coins for slaying the boss
         }
       }
 
@@ -258,6 +273,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         xpHistory: bossBonus
           ? { ...xpHistory, [today]: (xpHistory[today] ?? 0) + bossBonus }
           : xpHistory,
+        coins,
         stats,
         counters: { ...counters, bossesDefeated },
         streak,
@@ -299,6 +315,44 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const dismissLevelUp = () => setLevelUp(null);
 
+  const claimDailyReward = () => {
+    setState((prev) => {
+      const today = dateKey();
+      if (prev.lastRewardDate === today) return prev;
+      const totalXp = prev.totalXp + DAILY_REWARD.xp;
+      if (levelFromXp(totalXp) > levelFromXp(prev.totalXp)) {
+        setTimeout(() => setLevelUp(levelFromXp(totalXp)), 0);
+      }
+      return {
+        ...prev,
+        coins: prev.coins + DAILY_REWARD.coins,
+        totalXp,
+        xpHistory: { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + DAILY_REWARD.xp },
+        lastRewardDate: today,
+      };
+    });
+  };
+
+  const buyCosmetic = (id: string) => {
+    setState((prev) => {
+      const item = shopItemById(id);
+      if (!item || prev.ownedCosmetics.includes(id) || prev.coins < item.cost) return prev;
+      return {
+        ...prev,
+        coins: prev.coins - item.cost,
+        ownedCosmetics: [...prev.ownedCosmetics, id],
+        // auto-equip titles on purchase
+        equippedTitle: item.type === "title" ? id : prev.equippedTitle,
+      };
+    });
+  };
+
+  const equipTitle = (id: string | null) => {
+    setState((prev) =>
+      id === null || prev.ownedCosmetics.includes(id) ? { ...prev, equippedTitle: id } : prev,
+    );
+  };
+
   const level = useMemo(() => levelFromXp(state.totalXp), [state.totalXp]);
 
   const value: GameContextValue = {
@@ -315,6 +369,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     regenerateQuests,
     resetProgress,
     claimChallenge,
+    claimDailyReward,
+    buyCosmetic,
+    equipTitle,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

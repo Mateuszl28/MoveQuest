@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Swords, Dumbbell, Trophy, Users, MessageCircle,
-  LogOut, RefreshCw, Star, Sparkles, Flame, Settings,
+  LogOut, RefreshCw, Star, Sparkles, Flame, Settings, ShoppingBag, Coins,
 } from "lucide-react";
 import { useGame } from "@/lib/game-store";
 import { levelFromXp, levelProgress, xpForNextLevel, xpIntoLevel, XP_PER_LEVEL } from "@/lib/utils";
@@ -23,7 +23,11 @@ import { Coach } from "@/components/game/coach";
 import { XpChart } from "@/components/game/xp-chart";
 import { FriendChallenges } from "@/components/game/friend-challenges";
 import { SettingsPanel } from "@/components/game/settings-panel";
+import { Shop } from "@/components/game/shop";
+import { DailyReward } from "@/components/game/daily-reward";
 import { SupportFoundation } from "@/components/foundation/support-foundation";
+import { rankForLevel } from "@/lib/ranks";
+import { shopItemById } from "@/lib/shop";
 
 function greeting() {
   const h = new Date().getHours();
@@ -39,6 +43,7 @@ const TABS = [
   { value: "achievements", label: "Badges", icon: <Trophy className="size-4" /> },
   { value: "leaderboard", label: "Ranks", icon: <Users className="size-4" /> },
   { value: "coach", label: "Coach", icon: <MessageCircle className="size-4" /> },
+  { value: "shop", label: "Shop", icon: <ShoppingBag className="size-4" /> },
   { value: "settings", label: "Settings", icon: <Settings className="size-4" /> },
 ];
 
@@ -55,7 +60,10 @@ function SectionTitle({ icon, children, action }: { icon: React.ReactNode; child
 
 export default function Dashboard() {
   const router = useRouter();
-  const { state, ready, level, completeQuest, regenerateQuests, logout, claimChallenge } = useGame();
+  const {
+    state, ready, level, completeQuest, regenerateQuests, logout,
+    claimChallenge, claimDailyReward, buyCosmetic, equipTitle,
+  } = useGame();
   const [tab, setTab] = useState("overview");
 
   useEffect(() => {
@@ -82,6 +90,9 @@ export default function Dashboard() {
   const completed = state.quests.filter((q) => q.completed);
   const unlocked = state.achievements.filter((a) => a.unlocked).length;
   const playerLb = { username: p.username, avatar: p.avatar, xp: state.totalXp, streak: state.streak.current };
+  const rank = rankForLevel(level);
+  const equippedTitle = state.equippedTitle ? shopItemById(state.equippedTitle)?.value : null;
+  const titleText = equippedTitle ?? `${rank.emoji} ${rank.name}`;
 
   const QuestsBlock = (
     <div className="rounded-2xl border border-border bg-card/60 p-5">
@@ -138,15 +149,21 @@ export default function Dashboard() {
             <div>
               <p className="text-sm text-muted">{greeting()},</p>
               <h1 className="font-display text-2xl font-extrabold leading-tight">{p.username}</h1>
-              <div className="mt-1 flex flex-wrap gap-1.5">
+              <p className="text-xs font-semibold text-violet-300">{titleText}</p>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
                 <Badge variant="muted" className="capitalize">{p.fitnessLevel}</Badge>
                 <Badge variant="gold"><Flame className="size-3" /> {state.streak.current} day streak</Badge>
               </div>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => { logout(); router.replace("/"); }}>
-            <LogOut className="size-3.5" /> Log out
-          </Button>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 rounded-xl bg-amber-400/15 px-3 py-2 font-display font-bold text-gold ring-1 ring-inset ring-amber-300/30">
+              <Coins className="size-4" /> {state.coins.toLocaleString()}
+            </span>
+            <Button variant="outline" size="sm" onClick={() => { logout(); router.replace("/"); }}>
+              <LogOut className="size-3.5" /> Log out
+            </Button>
+          </div>
         </div>
 
         {/* XP BAR */}
@@ -185,6 +202,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="space-y-5">
+              <DailyReward lastRewardDate={state.lastRewardDate} onClaim={claimDailyReward} />
               <BossBattle boss={state.boss} />
               <StreakWidget streak={state.streak} />
               <FriendChallenges state={state} onClaim={claimChallenge} />
@@ -218,6 +236,13 @@ export default function Dashboard() {
               <XpChart xpHistory={state.xpHistory} />
             </div>
             <StreakWidget streak={state.streak} />
+          </div>
+        )}
+
+        {tab === "shop" && (
+          <div>
+            <SectionTitle icon={<ShoppingBag className="size-5 text-gold" />}>Reward Shop</SectionTitle>
+            <Shop state={state} onBuy={buyCosmetic} onEquip={equipTitle} />
           </div>
         )}
 
