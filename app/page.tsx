@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FAQ } from "@/components/landing/faq";
+import { SupportFoundation } from "@/components/foundation/support-foundation";
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
@@ -73,6 +74,7 @@ export default function Landing() {
             <a href="#how" className="hover:text-foreground">How it works</a>
             <a href="#features" className="hover:text-foreground">Features</a>
             <a href="#bosses" className="hover:text-foreground">Bosses</a>
+            <a href="#support" className="hover:text-foreground">Support</a>
             <a href="#faq" className="hover:text-foreground">FAQ</a>
           </div>
           <Link href="/login">
@@ -293,6 +295,9 @@ export default function Landing() {
           ))}
         </div>
       </section>
+
+      {/* SUPPORT FOUNDATION */}
+      <SupportFoundation variant="section" />
 
       {/* FAQ */}
       <section id="faq" className="mx-auto max-w-6xl px-4 py-20">

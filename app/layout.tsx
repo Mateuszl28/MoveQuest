@@ -3,6 +3,7 @@ import { Geist, Sora } from "next/font/google";
 import "./globals.css";
 import { GameProvider } from "@/lib/game-store";
 import { AchievementToast } from "@/components/game/achievement-toast";
+import { LevelUpModal } from "@/components/game/level-up-modal";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const display = Sora({ variable: "--font-display", subsets: ["latin"], weight: ["600", "700", "800"] });
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <GameProvider>
           {children}
           <AchievementToast />
+          <LevelUpModal />
         </GameProvider>
       </body>
     </html>

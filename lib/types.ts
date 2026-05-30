@@ -84,4 +84,6 @@ export interface GameState {
   };
   /** XP earned per day for charts, keyed by date */
   xpHistory: Record<string, number>;
+  /** ids of friend challenges already claimed (prevents double reward) */
+  claimedChallenges: string[];
 }

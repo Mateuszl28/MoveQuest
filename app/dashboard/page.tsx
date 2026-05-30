@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Swords, Dumbbell, Trophy, Users, MessageCircle,
-  LogOut, RefreshCw, Star, Sparkles, Flame,
+  LogOut, RefreshCw, Star, Sparkles, Flame, Settings,
 } from "lucide-react";
 import { useGame } from "@/lib/game-store";
 import { levelFromXp, levelProgress, xpForNextLevel, xpIntoLevel, XP_PER_LEVEL } from "@/lib/utils";
@@ -20,6 +20,10 @@ import { CharacterCard } from "@/components/game/character-card";
 import { AchievementsGallery } from "@/components/game/achievements-gallery";
 import { Leaderboard } from "@/components/game/leaderboard";
 import { Coach } from "@/components/game/coach";
+import { XpChart } from "@/components/game/xp-chart";
+import { FriendChallenges } from "@/components/game/friend-challenges";
+import { SettingsPanel } from "@/components/game/settings-panel";
+import { SupportFoundation } from "@/components/foundation/support-foundation";
 
 function greeting() {
   const h = new Date().getHours();
@@ -35,6 +39,7 @@ const TABS = [
   { value: "achievements", label: "Badges", icon: <Trophy className="size-4" /> },
   { value: "leaderboard", label: "Ranks", icon: <Users className="size-4" /> },
   { value: "coach", label: "Coach", icon: <MessageCircle className="size-4" /> },
+  { value: "settings", label: "Settings", icon: <Settings className="size-4" /> },
 ];
 
 function SectionTitle({ icon, children, action }: { icon: React.ReactNode; children: React.ReactNode; action?: React.ReactNode }) {
@@ -50,7 +55,7 @@ function SectionTitle({ icon, children, action }: { icon: React.ReactNode; child
 
 export default function Dashboard() {
   const router = useRouter();
-  const { state, ready, level, completeQuest, regenerateQuests, logout } = useGame();
+  const { state, ready, level, completeQuest, regenerateQuests, logout, claimChallenge } = useGame();
   const [tab, setTab] = useState("overview");
 
   useEffect(() => {
@@ -169,6 +174,7 @@ export default function Dashboard() {
           <div className="grid gap-5 lg:grid-cols-3">
             <div className="space-y-5 lg:col-span-2">
               {QuestsBlock}
+              <XpChart xpHistory={state.xpHistory} />
               <div>
                 <SectionTitle icon={<Trophy className="size-5 text-gold" />} action={
                   <Button variant="ghost" size="sm" onClick={() => setTab("achievements")}>View all</Button>
@@ -181,6 +187,7 @@ export default function Dashboard() {
             <div className="space-y-5">
               <BossBattle boss={state.boss} />
               <StreakWidget streak={state.streak} />
+              <FriendChallenges state={state} onClaim={claimChallenge} />
               <div className="rounded-2xl border border-border bg-card/60 p-5">
                 <SectionTitle icon={<Users className="size-5 text-emerald-300" />} action={
                   <Button variant="ghost" size="sm" onClick={() => setTab("leaderboard")}>Full</Button>
@@ -189,6 +196,7 @@ export default function Dashboard() {
                 </SectionTitle>
                 <Leaderboard player={playerLb} limit={5} showControls={false} />
               </div>
+              <SupportFoundation variant="card" />
             </div>
           </div>
         )}
@@ -202,11 +210,24 @@ export default function Dashboard() {
 
         {tab === "hero" && (
           <div className="grid gap-5 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <SectionTitle icon={<Dumbbell className="size-5 text-rose-300" />}>Character Progression</SectionTitle>
-              <CharacterCard stats={state.stats} />
+            <div className="space-y-5 lg:col-span-2">
+              <div>
+                <SectionTitle icon={<Dumbbell className="size-5 text-rose-300" />}>Character Progression</SectionTitle>
+                <CharacterCard stats={state.stats} />
+              </div>
+              <XpChart xpHistory={state.xpHistory} />
             </div>
             <StreakWidget streak={state.streak} />
+          </div>
+        )}
+
+        {tab === "settings" && (
+          <div className="grid gap-5 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <SectionTitle icon={<Settings className="size-5 text-violet-300" />}>Settings</SectionTitle>
+              <SettingsPanel />
+            </div>
+            <SupportFoundation variant="card" />
           </div>
         )}
 

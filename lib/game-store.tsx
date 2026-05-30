@@ -43,6 +43,7 @@ function freshState(): GameState {
     bossDate: null,
     counters: { questsCompleted: 0, squats: 0, bossesDefeated: 0, minutesStretched: 0 },
     xpHistory: {},
+    claimedChallenges: [],
   };
 }
 
@@ -100,12 +101,17 @@ interface GameContextValue {
   ready: boolean;
   level: number;
   toast: Achievement | null;
+  /** set to the new level when the player just levelled up */
+  levelUp: number | null;
+  dismissLevelUp: () => void;
   createProfile: (p: Profile) => void;
   updateProfile: (p: Partial<Profile>) => void;
   logout: () => void;
   completeQuest: (id: string) => void;
   regenerateQuests: () => void;
   resetProgress: () => void;
+  /** claim a friend challenge reward (idempotent per id) */
+  claimChallenge: (id: string, rewardXp: number) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -114,6 +120,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<GameState>(freshState);
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<Achievement | null>(null);
+  const [levelUp, setLevelUp] = useState<number | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // hydrate from localStorage on mount, then roll over to today
@@ -264,9 +271,33 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         // defer toast out of the setState updater
         setTimeout(() => flashToast(newlyUnlocked[0]), 0);
       }
+
+      // level-up celebration
+      const newLevel = levelFromXp(next.totalXp);
+      if (newLevel > levelFromXp(prev.totalXp)) {
+        setTimeout(() => setLevelUp(newLevel), 0);
+      }
       return next;
     });
   };
+
+  const claimChallenge = (id: string, rewardXp: number) => {
+    setState((prev) => {
+      if (prev.claimedChallenges.includes(id)) return prev;
+      const today = dateKey();
+      const totalXp = prev.totalXp + rewardXp;
+      const newLevel = levelFromXp(totalXp);
+      if (newLevel > levelFromXp(prev.totalXp)) setTimeout(() => setLevelUp(newLevel), 0);
+      return {
+        ...prev,
+        totalXp,
+        xpHistory: { ...prev.xpHistory, [today]: (prev.xpHistory[today] ?? 0) + rewardXp },
+        claimedChallenges: [...prev.claimedChallenges, id],
+      };
+    });
+  };
+
+  const dismissLevelUp = () => setLevelUp(null);
 
   const level = useMemo(() => levelFromXp(state.totalXp), [state.totalXp]);
 
@@ -275,12 +306,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     ready,
     level,
     toast,
+    levelUp,
+    dismissLevelUp,
     createProfile,
     updateProfile,
     logout,
     completeQuest,
     regenerateQuests,
     resetProgress,
+    claimChallenge,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
