@@ -64,7 +64,8 @@ function load(): GameState {
 
 /** Ensure today's quests + boss exist; roll the streak if a day was missed. */
 function withDailyRollover(state: GameState): GameState {
-  if (!state.profile) return state;
+  const profile = state.profile;
+  if (!profile) return state;
   const today = dateKey();
   let next = state;
 
@@ -72,8 +73,8 @@ function withDailyRollover(state: GameState): GameState {
     next = {
       ...next,
       quests: generateDailyQuests({
-        level: next.profile.fitnessLevel,
-        preference: next.profile.difficultyPreference,
+        level: profile.fitnessLevel,
+        preference: profile.difficultyPreference,
         streak: next.streak.current,
       }),
       questsDate: today,
@@ -139,7 +140,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   };
 
   const createProfile = (p: Profile) => {
-    setState((prev) => {
+    setState(() => {
       const base = { ...freshState(), profile: p };
       return withDailyRollover(base);
     });

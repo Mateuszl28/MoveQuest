@@ -16,7 +16,6 @@ export function StatRadar({ stats }: { stats: CharacterStats }) {
     { stat: "AGI", value: stats.agility },
     { stat: "CON", value: stats.consistency },
   ];
-  const max = Math.max(10, ...data.map((d) => d.value));
 
   return (
     <div className="h-48 w-full">
@@ -33,7 +32,6 @@ export function StatRadar({ stats }: { stats: CharacterStats }) {
             strokeWidth={2}
             fill="url(#radarFill)"
             fillOpacity={0.6}
-            domain={[0, max]}
             isAnimationActive
           />
           <defs>
