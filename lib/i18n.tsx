@@ -287,6 +287,7 @@ const PL: Record<string, string> = {
   "rank.Champion": "Czempion",
   "rank.Hero": "Bohater",
   "rank.Legend": "Legenda",
+  "install": "Zainstaluj apkę",
 };
 
 export function useT() {

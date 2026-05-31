@@ -42,6 +42,7 @@ import { shopItemById } from "@/lib/shop";
 import { heroClassDef } from "@/lib/classes";
 import { companionEmoji } from "@/lib/companions";
 import { useT } from "@/lib/i18n";
+import { InstallPrompt } from "@/components/install-prompt";
 
 function greeting() {
   const h = new Date().getHours();
@@ -194,6 +195,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <InstallPrompt />
             <span className="flex items-center gap-1.5 rounded-xl bg-amber-400/15 px-3 py-2 font-display font-bold text-gold ring-1 ring-inset ring-amber-300/30">
               <Coins className="size-4" /> {state.coins.toLocaleString()}
             </span>

@@ -10,22 +10,37 @@ daily bosses, and climb the leaderboard. A fitness app that feels like an RPG.
 
 ## ✨ Features
 
-- **Adaptive quest engine** — daily quests generated from your fitness level, difficulty
-  preference and streak (deterministic per-day, so they're stable across reloads).
-- **XP & levels** — `level = floor(totalXP / 500) + 1`. Easy = 25 XP · Medium = 50 · Hard = 100.
-- **Character progression** — Strength, Endurance, Agility & Consistency stats, visualised on
-  an animated radar chart.
-- **Streak system** — current & best streak, weekly consistency grid, milestone rewards at
-  3 / 7 / 14 / 30 days.
-- **Achievements** — collectible badges (First Steps, Squat Warrior, 7-Day Hero, XP Master…)
-  with live progress and unlock toasts.
-- **Daily boss battles** — a new boss each day (Sedentary Dragon, Burnout Beast, Hydra of
-  Laziness…). Each completed quest deals damage; defeat the boss for bonus XP.
-- **Leaderboard** — global & friends rankings, sortable by XP, level or streak.
-- **AI Coach (Coach Quill)** — a context-aware chat coach that nudges you based on your
-  current quests, streak and boss.
-- **Premium gaming UI** — dark theme, purple/blue gradients, gold for XP, green for completed,
-  built mobile-first with Framer Motion animations. Installable PWA.
+**Core RPG loop**
+- **Adaptive quest engine** — daily quests from your fitness level, class, difficulty preference
+  and streak (deterministic per-day). Time-based quests have a built-in **timer**; step quests
+  link to a **steps widget**; you can **reroll** a quest for coins or add your **own quests**.
+- **XP, levels & ranks** — `level = floor(totalXP / 500) + 1`. Easy 25 · Medium 50 · Hard 100 XP.
+  Seven ranks from Novice to Legend.
+- **Hero classes** — Warrior / Runner / Yogi / All-Rounder, each biasing the daily mix and
+  granting an XP passive.
+- **Character progression** — Strength, Endurance, Agility & Consistency on an animated radar
+  chart, plus a lifetime stats panel and a 12-week **activity heatmap**.
+
+**Gamification**
+- **XP combo multiplier** — back-to-back completions stack up to ×1.5 with a live combo meter.
+- **Daily events** — rotating modifiers (category XP boost / boss frenzy / coin rush) with real effects.
+- **Daily boss + weekly raid** — every quest damages both; defeat them for big rewards.
+- **Perfect Day** — clear every quest for a confetti celebration and bonus.
+- **Streaks** — current/best, weekly grid, milestone rewards, and buyable **streak freezes**.
+- **Achievements** — collectible badges with live progress and unlock toasts.
+- **Coins economy** — earn coins; spend them in the **reward shop** (titles + premium avatars),
+  on rerolls/freezes, or via the **daily reward** and the **fortune wheel**.
+- **Companion pet** — pick a species that evolves through four stages as you level.
+- **Friend challenges, weekly challenge & leaderboard** (global/friends, sortable).
+- **AI Coach (Coach Quill)** — a context-aware chat coach.
+
+**Platform & polish**
+- **Bilingual (EN / 🇵🇱 PL)** — full UI + content translation, auto-detected, live toggle, no progress loss.
+- **Shareable hero card** — server-rendered OG image + share page for link previews.
+- **Installable PWA** — offline service worker, install prompt, web manifest.
+- **Opt-in reminders** (Notification API), **sound effects** (Web Audio) and **haptics**.
+- **Premium gaming UI** — ink theme with a single lime accent, gold for XP, film-grain texture,
+  Bricolage Grotesque display font, mobile-first, Framer Motion animations.
 
 ## 🧱 Tech stack
 

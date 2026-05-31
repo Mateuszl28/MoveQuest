@@ -15,13 +15,27 @@ const display = Bricolage_Grotesque({
   weight: ["600", "700", "800"],
 });
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://212.132.124.0:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE),
   title: "MoveQuest — Turn Real-Life Movement Into Epic Adventures",
   description:
     "Complete quests, earn XP, defeat bosses, and level up your real life. The RPG that rewards you for moving.",
   applicationName: "MoveQuest",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "MoveQuest", statusBarStyle: "black-translucent" },
+  openGraph: {
+    type: "website",
+    title: "MoveQuest — Turn Real-Life Movement Into Epic Adventures",
+    description: "Complete quests, earn XP, defeat bosses, and level up your real life.",
+    siteName: "MoveQuest",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MoveQuest",
+    description: "Turn real-life movement into epic adventures.",
+  },
 };
 
 export const viewport: Viewport = {
