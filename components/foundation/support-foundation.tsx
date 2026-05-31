@@ -66,7 +66,7 @@ export function SupportFoundation({ variant = "section" }: { variant?: "section"
               financial, psychological and organizational support to children, adults and
               families facing cancer across Poland.{" "}
               <span className="text-foreground/90">
-                „Nowotwór to wyzwanie, z którym nikt nie powinien zostać sam."
+                „Nowotwór to wyzwanie, z którym nikt nie powinien zostać sam.”
               </span>{" "}
               If you can spare a little strength, please consider helping — this is not an ad,
               just a request from one human to another.
