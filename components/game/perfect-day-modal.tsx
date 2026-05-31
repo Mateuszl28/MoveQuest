@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useGame } from "@/lib/game-store";
 import { playSfx } from "@/lib/sound";
 
 const COLORS = ["#a3e635", "#bef264", "#34d399", "#f5b73c", "#fde68a"];
 
+type Piece = { id: number; x: number; y: number; rot: number; delay: number; color: string; size: number };
+
 function Burst() {
-  const pieces = useMemo(
-    () =>
+  const [pieces, setPieces] = useState<Piece[]>([]);
+  useEffect(() => {
+    setPieces(
       Array.from({ length: 36 }, (_, i) => ({
         id: i,
         x: (Math.random() - 0.5) * 340,
@@ -19,8 +22,8 @@ function Burst() {
         color: COLORS[i % COLORS.length],
         size: 6 + Math.random() * 8,
       })),
-    [],
-  );
+    );
+  }, []);
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       {pieces.map((p) => (

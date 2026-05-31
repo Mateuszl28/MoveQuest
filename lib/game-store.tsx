@@ -221,8 +221,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [perfectDay, setPerfectDay] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // hydrate from localStorage on mount, then roll over to today
+  // hydrate from localStorage on mount, then roll over to today.
+  // Intentional: we start from a stable SSR-safe default and load client state
+  // after mount to avoid hydration mismatches.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setState(withDailyRollover(load()));
     setReady(true);
   }, []);
