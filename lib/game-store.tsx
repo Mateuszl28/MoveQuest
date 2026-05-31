@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -246,8 +245,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   };
 
   const createProfile = (p: Profile) => {
-    setState(() => {
-      const base = { ...freshState(), profile: p };
+    setState((prev) => {
+      // keep the visitor's language + sound preference chosen before signing up
+      const base = {
+        ...freshState(),
+        profile: p,
+        lang: prev.lang,
+        soundEnabled: prev.soundEnabled,
+      };
       return withDailyRollover(base);
     });
   };
@@ -277,11 +282,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const logout = () => setState(freshState());
+  const logout = () => setState((prev) => ({ ...freshState(), lang: prev.lang }));
   const resetProgress = () => {
-    setState((prev) =>
-      prev.profile ? withDailyRollover({ ...freshState(), profile: prev.profile }) : freshState(),
-    );
+    setState((prev) => {
+      if (!prev.profile) return { ...freshState(), lang: prev.lang };
+      // wipe progress but keep the profile and personal preferences/content
+      return withDailyRollover({
+        ...freshState(),
+        profile: prev.profile,
+        lang: prev.lang,
+        soundEnabled: prev.soundEnabled,
+        notificationsEnabled: prev.notificationsEnabled,
+        companion: prev.companion,
+        customQuests: prev.customQuests,
+      });
+    });
   };
 
   const regenerateQuests = () => {
