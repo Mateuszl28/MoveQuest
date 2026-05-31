@@ -1,28 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useGame } from "@/lib/game-store";
 import { playSfx } from "@/lib/sound";
+import { mulberry32 } from "@/lib/utils";
 
 const COLORS = ["#a3e635", "#bef264", "#34d399", "#f5b73c", "#fde68a"];
 
-type Piece = { id: number; x: number; y: number; rot: number; delay: number; color: string; size: number };
-
 function Burst() {
-  const [pieces, setPieces] = useState<Piece[]>([]);
-  useEffect(() => {
-    setPieces(
-      Array.from({ length: 36 }, (_, i) => ({
-        id: i,
-        x: (Math.random() - 0.5) * 340,
-        y: 120 + Math.random() * 240,
-        rot: Math.random() * 640,
-        delay: Math.random() * 0.2,
-        color: COLORS[i % COLORS.length],
-        size: 6 + Math.random() * 8,
-      })),
-    );
+  const pieces = useMemo(() => {
+    const rng = mulberry32(0x5eed);
+    return Array.from({ length: 36 }, (_, i) => ({
+      id: i,
+      x: (rng() - 0.5) * 340,
+      y: 120 + rng() * 240,
+      rot: rng() * 640,
+      delay: rng() * 0.2,
+      color: COLORS[i % COLORS.length],
+      size: 6 + rng() * 8,
+    }));
   }, []);
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">

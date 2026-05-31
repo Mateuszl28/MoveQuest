@@ -1,30 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, X } from "lucide-react";
 import { useGame } from "@/lib/game-store";
 import { playSfx } from "@/lib/sound";
+import { mulberry32 } from "@/lib/utils";
 
 const COLORS = ["#fbbf24", "#8b5cf6", "#3b82f6", "#22c55e", "#f472b6", "#fde68a"];
 
-type Piece = { id: number; x: number; y: number; rot: number; delay: number; color: string; size: number };
-
 function Confetti() {
-  // generated after mount (client-only) so render stays pure
-  const [pieces, setPieces] = useState<Piece[]>([]);
-  useEffect(() => {
-    setPieces(
-      Array.from({ length: 40 }, (_, i) => ({
-        id: i,
-        x: (Math.random() - 0.5) * 320,
-        y: 120 + Math.random() * 260,
-        rot: Math.random() * 720,
-        delay: Math.random() * 0.25,
-        color: COLORS[i % COLORS.length],
-        size: 6 + Math.random() * 8,
-      })),
-    );
+  // deterministic (seeded) so render is pure — no Math.random
+  const pieces = useMemo(() => {
+    const rng = mulberry32(0x90b3);
+    return Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      x: (rng() - 0.5) * 320,
+      y: 120 + rng() * 260,
+      rot: rng() * 720,
+      delay: rng() * 0.25,
+      color: COLORS[i % COLORS.length],
+      size: 6 + rng() * 8,
+    }));
   }, []);
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
