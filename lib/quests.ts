@@ -10,7 +10,9 @@ import {
 
 type Template = {
   title: string;
+  titlePl: string;
   description: string;
+  descPl: string;
   category: Quest["category"];
   icon: string;
   difficulty: Difficulty;
@@ -21,38 +23,38 @@ type Template = {
 
 /**
  * Built-in "AI" quest pool. Scales reps/targets to fitness level.
- * The generator below selects a balanced, deterministic daily set.
+ * Each template carries English + Polish text so the language can switch live.
  */
 function buildPool(level: FitnessLevel): Template[] {
   const m = level === "beginner" ? 0.7 : level === "advanced" ? 1.5 : 1;
   const r = (n: number) => Math.round(n * m);
   return [
     // ---- cardio ----
-    { title: `Walk ${r(4000)} steps`, description: "Get moving and rack up your daily steps.", category: "cardio", icon: "Footprints", difficulty: "easy", stepGoal: r(4000) },
-    { title: "15-minute walk after lunch", description: "A post-lunch stroll to keep the energy up.", category: "cardio", icon: "MapPin", difficulty: "easy", durationSec: 900 },
-    { title: `Jog for ${r(20)} minutes`, description: "Steady-pace jog to build endurance.", category: "cardio", icon: "Wind", difficulty: "medium", durationSec: r(20) * 60 },
-    { title: `Climb ${r(10)} flights of stairs`, description: "Take the stairs instead of the elevator.", category: "cardio", icon: "TrendingUp", difficulty: "medium" },
-    { title: `${r(30)}-minute bike ride`, description: "Outdoor or stationary — get the legs spinning.", category: "cardio", icon: "Bike", difficulty: "hard", durationSec: r(30) * 60 },
-    { title: `Do ${r(40)} jumping jacks`, description: "Quick cardio burst to wake up the body.", category: "cardio", icon: "Zap", difficulty: "easy" },
+    { title: `Walk ${r(4000)} steps`, titlePl: `Przejdź ${r(4000)} kroków`, description: "Get moving and rack up your daily steps.", descPl: "Rusz się i nazbieraj dzienne kroki.", category: "cardio", icon: "Footprints", difficulty: "easy", stepGoal: r(4000) },
+    { title: "15-minute walk after lunch", titlePl: "15-minutowy spacer po obiedzie", description: "A post-lunch stroll to keep the energy up.", descPl: "Spacer po obiedzie, by utrzymać energię.", category: "cardio", icon: "MapPin", difficulty: "easy", durationSec: 900 },
+    { title: `Jog for ${r(20)} minutes`, titlePl: `Biegaj przez ${r(20)} minut`, description: "Steady-pace jog to build endurance.", descPl: "Spokojny trucht budujący wytrzymałość.", category: "cardio", icon: "Wind", difficulty: "medium", durationSec: r(20) * 60 },
+    { title: `Climb ${r(10)} flights of stairs`, titlePl: `Wejdź po schodach ${r(10)} pięter`, description: "Take the stairs instead of the elevator.", descPl: "Wybierz schody zamiast windy.", category: "cardio", icon: "TrendingUp", difficulty: "medium" },
+    { title: `${r(30)}-minute bike ride`, titlePl: `${r(30)}-minutowa jazda na rowerze`, description: "Outdoor or stationary — get the legs spinning.", descPl: "Na zewnątrz lub stacjonarnie — rozkręć nogi.", category: "cardio", icon: "Bike", difficulty: "hard", durationSec: r(30) * 60 },
+    { title: `Do ${r(40)} jumping jacks`, titlePl: `Zrób ${r(40)} pajacyków`, description: "Quick cardio burst to wake up the body.", descPl: "Szybki zryw cardio, by obudzić ciało.", category: "cardio", icon: "Zap", difficulty: "easy" },
 
     // ---- strength ----
-    { title: `Do ${r(20)} squats`, description: "Legs and glutes — keep your chest up.", category: "strength", icon: "Dumbbell", difficulty: "easy", reps: r(20) },
-    { title: `Do ${r(15)} push-ups`, description: "Chest, shoulders and triceps. Modify on knees if needed.", category: "strength", icon: "Dumbbell", difficulty: "medium" },
-    { title: `Hold a ${r(45)}-second plank`, description: "Core stability — keep a straight line.", category: "strength", icon: "Shield", difficulty: "medium", durationSec: r(45) },
-    { title: `Do ${r(30)} lunges`, description: "Alternating lunges for lower-body strength.", category: "strength", icon: "Dumbbell", difficulty: "hard" },
-    { title: `${r(12)} glute bridges`, description: "Activate your posterior chain.", category: "strength", icon: "Dumbbell", difficulty: "easy" },
+    { title: `Do ${r(20)} squats`, titlePl: `Zrób ${r(20)} przysiadów`, description: "Legs and glutes — keep your chest up.", descPl: "Nogi i pośladki — trzymaj klatkę wysoko.", category: "strength", icon: "Dumbbell", difficulty: "easy", reps: r(20) },
+    { title: `Do ${r(15)} push-ups`, titlePl: `Zrób ${r(15)} pompek`, description: "Chest, shoulders and triceps. Modify on knees if needed.", descPl: "Klatka, barki i triceps. Możesz na kolanach.", category: "strength", icon: "Dumbbell", difficulty: "medium" },
+    { title: `Hold a ${r(45)}-second plank`, titlePl: `Utrzymaj deskę ${r(45)} sekund`, description: "Core stability — keep a straight line.", descPl: "Stabilność korpusu — trzymaj prostą linię.", category: "strength", icon: "Shield", difficulty: "medium", durationSec: r(45) },
+    { title: `Do ${r(30)} lunges`, titlePl: `Zrób ${r(30)} wykroków`, description: "Alternating lunges for lower-body strength.", descPl: "Naprzemienne wykroki na siłę dolnych partii.", category: "strength", icon: "Dumbbell", difficulty: "hard" },
+    { title: `${r(12)} glute bridges`, titlePl: `${r(12)} mostków biodrowych`, description: "Activate your posterior chain.", descPl: "Aktywuj tylną taśmę mięśniową.", category: "strength", icon: "Dumbbell", difficulty: "easy" },
 
     // ---- mobility ----
-    { title: "Stretch for 10 minutes", description: "Full-body stretch to loosen up.", category: "mobility", icon: "Sparkles", difficulty: "easy", durationSec: 600 },
-    { title: "5-minute mobility flow", description: "Hips, shoulders and spine circles.", category: "mobility", icon: "Sparkles", difficulty: "easy", durationSec: 300 },
-    { title: "10-minute yoga session", description: "Flow through a short yoga sequence.", category: "mobility", icon: "Flower2", difficulty: "medium", durationSec: 600 },
-    { title: "Foam-roll your legs", description: "Release tension in quads and calves.", category: "mobility", icon: "Activity", difficulty: "medium" },
+    { title: "Stretch for 10 minutes", titlePl: "Rozciągaj się 10 minut", description: "Full-body stretch to loosen up.", descPl: "Rozciąganie całego ciała, by się rozluźnić.", category: "mobility", icon: "Sparkles", difficulty: "easy", durationSec: 600 },
+    { title: "5-minute mobility flow", titlePl: "5-minutowy flow mobilności", description: "Hips, shoulders and spine circles.", descPl: "Krążenia bioder, barków i kręgosłupa.", category: "mobility", icon: "Sparkles", difficulty: "easy", durationSec: 300 },
+    { title: "10-minute yoga session", titlePl: "10-minutowa sesja jogi", description: "Flow through a short yoga sequence.", descPl: "Przejdź przez krótką sekwencję jogi.", category: "mobility", icon: "Flower2", difficulty: "medium", durationSec: 600 },
+    { title: "Foam-roll your legs", titlePl: "Rolowanie nóg", description: "Release tension in quads and calves.", descPl: "Rozluźnij napięcie w udach i łydkach.", category: "mobility", icon: "Activity", difficulty: "medium" },
 
     // ---- wellness ----
-    { title: "Drink 2 liters of water", description: "Stay hydrated throughout the day.", category: "wellness", icon: "Droplets", difficulty: "easy" },
-    { title: "5 minutes of breathing", description: "Box breathing to reset your nervous system.", category: "wellness", icon: "Heart", difficulty: "easy", durationSec: 300 },
-    { title: "Stand up every hour", description: "Break up sitting time with quick movement.", category: "wellness", icon: "Clock", difficulty: "medium" },
-    { title: "Go to bed before 11pm", description: "Recovery is part of the quest.", category: "wellness", icon: "Moon", difficulty: "easy" },
+    { title: "Drink 2 liters of water", titlePl: "Wypij 2 litry wody", description: "Stay hydrated throughout the day.", descPl: "Bądź nawodniony przez cały dzień.", category: "wellness", icon: "Droplets", difficulty: "easy" },
+    { title: "5 minutes of breathing", titlePl: "5 minut oddychania", description: "Box breathing to reset your nervous system.", descPl: "Oddychanie kwadratowe, by zresetować układ nerwowy.", category: "wellness", icon: "Heart", difficulty: "easy", durationSec: 300 },
+    { title: "Stand up every hour", titlePl: "Wstawaj co godzinę", description: "Break up sitting time with quick movement.", descPl: "Przerywaj siedzenie krótkim ruchem.", category: "wellness", icon: "Clock", difficulty: "medium" },
+    { title: "Go to bed before 11pm", titlePl: "Idź spać przed 23:00", description: "Recovery is part of the quest.", descPl: "Regeneracja to część wyprawy.", category: "wellness", icon: "Moon", difficulty: "easy" },
   ];
 }
 
@@ -60,7 +62,9 @@ function makeQuest(t: Template, idx: number, dayKey: string): Quest {
   return {
     id: `${dayKey}-${idx}-${t.title.replace(/\W+/g, "-").toLowerCase()}`,
     title: t.title,
+    titlePl: t.titlePl,
     description: t.description,
+    descriptionPl: t.descPl,
     category: t.category,
     icon: t.icon,
     difficulty: t.difficulty,

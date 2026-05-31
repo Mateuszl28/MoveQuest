@@ -8,6 +8,9 @@ export interface Quest {
   id: string;
   title: string;
   description: string;
+  /** Polish variants (rendered when lang === 'pl') */
+  titlePl?: string;
+  descriptionPl?: string;
   xpReward: number;
   difficulty: Difficulty;
   completed: boolean;

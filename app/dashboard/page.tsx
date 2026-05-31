@@ -112,7 +112,7 @@ export default function Dashboard() {
   const gh = new Date().getHours();
   const greetKey = gh < 12 ? "greet.morning" : gh < 18 ? "greet.afternoon" : "greet.evening";
   const equippedTitle = state.equippedTitle ? shopItemById(state.equippedTitle)?.value : null;
-  const titleText = equippedTitle ?? `${rank.emoji} ${rank.name}`;
+  const titleText = equippedTitle ?? `${rank.emoji} ${t(`rank.${rank.name}`, rank.name)}`;
   const heroFields = {
     username: p.username,
     avatar: p.avatar,

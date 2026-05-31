@@ -31,8 +31,8 @@ export function RaidBoss({ raid }: { raid: Raid | null }) {
           {raid.defeated ? "💀" : raid.emoji}
         </motion.div>
         <div className="min-w-0 flex-1">
-          <p className="font-display text-lg font-bold leading-tight">{raid.name}</p>
-          <p className="text-xs text-muted">{raid.title}</p>
+          <p className="font-display text-lg font-bold leading-tight">{t(`bn.${raid.name}`, raid.name)}</p>
+          <p className="text-xs text-muted">{t(`bt.${raid.title}`, raid.title)}</p>
           <div className="mt-3">
             <div className="mb-1 flex justify-between text-xs">
               <span className="text-fuchsia-200">HP</span>

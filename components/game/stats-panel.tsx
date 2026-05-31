@@ -36,9 +36,9 @@ export function StatsPanel({ state }: { state: GameState }) {
 
       <div className="mb-4 rounded-xl border border-border bg-white/5 p-3">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold">{rank.emoji} {rank.name}</span>
+          <span className="font-semibold">{rank.emoji} {t(`rank.${rank.name}`, rank.name)}</span>
           {next ? (
-            <span className="text-xs text-muted">{t("stats.next", "Next")}: {next.emoji} {next.name} (Lvl {next.minLevel})</span>
+            <span className="text-xs text-muted">{t("stats.next", "Next")}: {next.emoji} {t(`rank.${next.name}`, next.name)} (Lvl {next.minLevel})</span>
           ) : (
             <span className="text-xs text-gold">{t("stats.maxrank", "Max rank reached 👑")}</span>
           )}

@@ -36,6 +36,7 @@ export function QuestCard({
   const { state } = useGame();
   const sound = state.soundEnabled;
   const canReroll = rerollCost !== undefined && state.coins >= rerollCost;
+  const title = state.lang === "pl" && quest.titlePl ? quest.titlePl : quest.title;
   const [remaining, setRemaining] = useState<number | null>(null);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -101,7 +102,7 @@ export function QuestCard({
 
       <div className="min-w-0 flex-1">
         <p className={`truncate font-semibold ${quest.completed ? "text-emerald-200 line-through" : ""}`}>
-          {quest.title}
+          {title}
         </p>
         {timing ? (
           <p className="mt-0.5 font-display text-lg font-extrabold tabular-nums text-lime-200">

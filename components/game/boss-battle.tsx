@@ -75,8 +75,8 @@ export function BossBattle({ boss }: { boss: Boss | null }) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <p className="font-display text-lg font-bold leading-tight">{boss.name}</p>
-          <p className="text-xs text-muted">{boss.title}</p>
+          <p className="font-display text-lg font-bold leading-tight">{t(`bn.${boss.name}`, boss.name)}</p>
+          <p className="text-xs text-muted">{t(`bt.${boss.title}`, boss.title)}</p>
 
           <div className="mt-3">
             <div className="mb-1 flex justify-between text-xs">

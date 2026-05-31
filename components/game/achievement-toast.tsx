@@ -3,9 +3,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useGame } from "@/lib/game-store";
 import { Icon } from "./icon";
+import { useT } from "@/lib/i18n";
 
 export function AchievementToast() {
   const { toast } = useGame();
+  const { t } = useT();
   return (
     <div className="pointer-events-none fixed inset-x-0 top-4 z-[100] flex justify-center px-4">
       <AnimatePresence>
@@ -23,9 +25,9 @@ export function AchievementToast() {
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-gold">
-                Achievement unlocked
+                {t("ach.unlocked", "Achievement unlocked")}
               </p>
-              <p className="font-display font-bold leading-tight">{toast.title}</p>
+              <p className="font-display font-bold leading-tight">{t(`ach.${toast.id}.t`, toast.title)}</p>
             </div>
           </motion.div>
         )}

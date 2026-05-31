@@ -5,6 +5,7 @@ import { Lock } from "lucide-react";
 import type { GameState } from "@/lib/types";
 import { ACHIEVEMENTS, achievementProgress } from "@/lib/achievements";
 import { Icon } from "./icon";
+import { useT } from "@/lib/i18n";
 
 const TIER: Record<string, { ring: string; grad: string; label: string }> = {
   bronze: { ring: "ring-orange-400/40", grad: "from-orange-300 to-amber-600", label: "Bronze" },
@@ -20,6 +21,7 @@ export function AchievementsGallery({
   state: GameState;
   limit?: number;
 }) {
+  const { t } = useT();
   const items = ACHIEVEMENTS.map((def) => {
     const a = state.achievements.find((x) => x.id === def.id)!;
     return { def, unlocked: a.unlocked, progress: achievementProgress(def.id, state) };
@@ -52,8 +54,8 @@ export function AchievementsGallery({
                 <Lock className="size-6 text-muted" />
               )}
             </div>
-            <p className={`text-sm font-bold ${unlocked ? "" : "text-muted"}`}>{def.title}</p>
-            <p className="mt-0.5 line-clamp-2 text-[11px] text-muted">{def.description}</p>
+            <p className={`text-sm font-bold ${unlocked ? "" : "text-muted"}`}>{t(`ach.${def.id}.t`, def.title)}</p>
+            <p className="mt-0.5 line-clamp-2 text-[11px] text-muted">{t(`ach.${def.id}.d`, def.description)}</p>
             {!unlocked && (
               <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
                 <div
